@@ -1,0 +1,59 @@
+name: jokers_team_tracker
+description: "Flutter project."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Graphiques / Charts
+  fl_chart: ^0.68.0
+
+  # Supabase
+  supabase_flutter: ^2.5.0
+
+  # Navigation
+  go_router: ^13.0.0
+
+  # State Management
+  flutter_riverpod: ^2.5.0
+  riverpod_annotation: ^2.3.0
+
+  # UI
+  table_calendar: ^3.1.0
+  cupertino_icons: ^1.0.6
+
+  # Utilitaires
+  intl: ^0.19.0
+  flutter_dotenv: ^5.1.0
+
+  # Import Fichiers (Catapult)
+  file_picker: ^8.0.0
+
+  # CSV
+  csv: ^6.0.0
+
+  # Export / Impression / Partage PDF
+  pdf: ^3.11.0
+  printing: ^5.13.0
+
+  # Lecture Video
+  video_player: ^2.9.0
+  chewie: ^1.8.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.1.0
+  riverpod_generator: ^2.4.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - .env
