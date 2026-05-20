@@ -42,28 +42,22 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   // Connexion et récup du role
   Future<String?> login(String email, String password) async {
-    print('LOGIN APPELÉ — email: $email'); // ← ici
     state = state.copyWith(isLoading: true);
 
     try {
-      print('AVANT SUPABASE'); // ← ici
       final response = await _supabase.auth.signInWithPassword(
         email: email,
         password: password.trim(),
       );
-      print('APRÈS SUPABASE — user: ${response.user?.id}'); // ← ici
 
       final user = response.user;
       if (user == null) return "T'es qui ?";
-
-      print('RECHERCHE PROFIL pour id: ${user.id}');
 
       final profile = await _supabase
           .from('profiles')
           .select('role')
           .eq('id', user.id)
           .single();
-      print('PROFIL TROUVÉ : $profile');
 
       final role = profile['role'] as String;
 

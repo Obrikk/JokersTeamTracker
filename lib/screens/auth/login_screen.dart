@@ -40,13 +40,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (mounted) {
       final role = ref.read(authProvider).role;
       print('ROLE RÉCUPÉRÉ : $role');
-
-      try {
-        if (role != null) {
-          context.go(homeRouteForRole(role));
-        }
-      } catch (e) {
-        print(e);
+      if (role != null) {
+        context.go(homeRouteForRole(role));
       }
     }
   }
