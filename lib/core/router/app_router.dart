@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/user/auth_provider.dart';
 
-import '../../screens/auth/login_screen.dart';
+import 'router_notifier.dart';
+import '../../core/utils/role_helper.dart';
 
+import '../../screens/auth/login_screen.dart';
 import '../../screens/joueur/joueur_home_screen.dart';
 import '../../screens/coach/coach_home_screen.dart';
 import '../../screens/prep_physique/prep_home_screen.dart';
@@ -20,10 +22,12 @@ const String routeJoueurDashboard = '/joueur/home';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   final authState = ref.watch(authProvider);
+  final notifier = ref.watch(routerNotifierProvider);
 
   return GoRouter(
-    initialLocation: routeLogin,
+    initialLocation: homeRouteForRole(authState.role),
 
+    refreshListenable: notifier,
     redirect: (context, state) {
       final isLoggedIn = authState.user != null;
       final role = authState.role;
@@ -67,17 +71,17 @@ final appRouterProvider = Provider<GoRouter>((ref) {
   );
 });
 
-String homeRouteForRole(String role) {
+String homeRouteForRole(UserRole? role) {
   switch (role) {
-    case 'Coach':
+    case UserRole.coach:
       return routeCoachDashboard;
-    case 'Prep_Physique':
+    case UserRole.prep:
       return routePrepDashboard;
-    case 'Medical':
+    case UserRole.medical:
       return routeMedicalDashboard;
-    case 'Joueur':
+    case UserRole.joueur:
       return routeJoueurDashboard;
-    case 'Admin':
+    case UserRole.admin:
       return routeAdminDashboard;
     default:
       return routeLogin;

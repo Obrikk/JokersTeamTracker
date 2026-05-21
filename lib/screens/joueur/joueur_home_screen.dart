@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jokers_team_tracker/providers/user/auth_provider.dart';
 import '../../core/theme/colors.dart';
+
+import '../../providers/user/auth_provider.dart';
+
+import '../../widgets/common/app_bar_widget.dart';
 
 class JoueurDashboardScreen extends ConsumerStatefulWidget {
   const JoueurDashboardScreen({super.key});
@@ -14,9 +17,14 @@ class JoueurDashboardScreen extends ConsumerStatefulWidget {
 class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    final profile = authState.profile;
+
     return Scaffold(
       backgroundColor: AppColors.bgDark,
-      body: Center(
+      appBar: AppBarWidget(profil: profile),
+      body: SafeArea(
+        top: true,
         child: SingleChildScrollView(
           padding: EdgeInsets.all(32),
           child: Column(
@@ -39,42 +47,6 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      OutlinedButton.icon(
-                        onPressed: () async {
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder: (ctx) => AlertDialog(
-                              title: const Text('Déconnexion'),
-                              content: const Text(
-                                'Es-tu sûr de vouloir te déconnecter ?',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(ctx, false),
-                                  child: const Text('Annuler'),
-                                ),
-                                FilledButton(
-                                  onPressed: () => Navigator.pop(ctx, true),
-                                  child: const Text('Déconnexion'),
-                                ),
-                              ],
-                            ),
-                          );
-
-                          if (confirm == true) {
-                            await ref.read(authProvider.notifier).logout();
-                          }
-                        },
-                        icon: const Icon(Icons.logout, color: Colors.red),
-                        label: const Text(
-                          'Se déconnecter',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.red),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                      ),
                     ],
                   ),
                 ),

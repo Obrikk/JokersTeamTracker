@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jokers_team_tracker/core/theme/colors.dart';
 
 import '../../../providers/user/auth_provider.dart';
 import '../../core/router/app_router.dart';
@@ -39,7 +40,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     if (mounted) {
       final role = ref.read(authProvider).role;
-      print('ROLE RÉCUPÉRÉ : $role');
       if (role != null) {
         context.go(homeRouteForRole(role));
       }
@@ -61,12 +61,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                color: Color(0xFF1A1A1A),
+                color: AppColors.bgCardDark,
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
                       const SizedBox(height: 32),
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: AppColors.bgDark,
+                          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                        ),
+
+                        child: const Icon(Icons.sports_hockey, size: 80),
+                      ),
+                      const SizedBox(height: 16),
                       const Text(
                         'Jokers',
                         style: TextStyle(
@@ -84,9 +95,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           letterSpacing: 2,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 32),
                       const Text(
-                        'Connexion Staff',
+                        'Connexion',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,

@@ -1,0 +1,67 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../core/theme/colors.dart';
+import '../../providers/user/auth_provider.dart';
+import '../../core/theme/text_styles.dart';
+import '../../models/user/profiles_model.dart';
+
+class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
+  final UserProfile? profil;
+
+  const AppBarWidget({super.key, required this.profil});
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return AppBar(
+      backgroundColor: AppColors.bgCardDark,
+      automaticallyImplyLeading: false,
+      title: Text(
+        "Dashboard ${profil?.nom ?? 'rien'} ${profil?.prenom ?? 'du tout'} ",
+        style: AppTextStyles.headingDark,
+      ),
+      actions: [
+        Padding(
+          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 12, 0),
+          child: OutlinedButton.icon(
+            onPressed: () async {
+              final confirm = await showDialog<bool>(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Déconnexion'),
+                  content: const Text('Es-tu sûr de vouloir te déconnecter ?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx, false),
+                      child: const Text('Annuler'),
+                    ),
+                    FilledButton(
+                      onPressed: () => Navigator.pop(ctx, true),
+                      child: const Text('Déconnexion'),
+                    ),
+                  ],
+                ),
+              );
+
+              if (confirm == true) {
+                await ref.read(authProvider.notifier).logout();
+              }
+            },
+            icon: const Icon(Icons.logout, color: Colors.red),
+            label: const Text(
+              'Se déconnecter',
+              style: TextStyle(color: Colors.red),
+            ),
+            style: OutlinedButton.styleFrom(
+              side: const BorderSide(color: Colors.red),
+              padding: const EdgeInsets.all(14),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

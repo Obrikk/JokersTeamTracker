@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jokers_team_tracker/providers/user/auth_provider.dart';
 import '../../core/theme/colors.dart';
 
+import '../../widgets/common/app_bar_widget.dart';
+
 class MedicalDashboardScreen extends ConsumerStatefulWidget {
   const MedicalDashboardScreen({super.key});
 
@@ -15,8 +17,13 @@ class _MedicalDashboardScreenState
     extends ConsumerState<MedicalDashboardScreen> {
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    final profile = authState.profile;
+
     return Scaffold(
       backgroundColor: AppColors.bgDark,
+      appBar: AppBarWidget(profil: profile),
+
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(32),

@@ -1,17 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../models/user/profiles_model.dart';
+import '../../services/user/auth_service.dart';
+import '../../core/constants/supabase_constants.dart';
+import '../../core/utils/role_helper.dart';
 
 // Authentification
 
 class AuthState {
   final bool isLoading;
   final User? user;
-  final String? role;
+  final UserProfile? profile;
+  final UserRole? role;
   final String? errorMessage;
 
   const AuthState({
     this.isLoading = false,
     this.user,
+    this.profile,
     this.role,
     this.errorMessage,
   });
@@ -19,14 +25,14 @@ class AuthState {
   AuthState copyWith({
     bool? isLoading,
     User? user,
-    String? role,
-    String? errorMessage,
+    UserRole? role,
+    UserProfile? profile,
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
       user: user ?? this.user,
       role: role ?? this.role,
-      errorMessage: errorMessage ?? this.errorMessage,
+      profile: profile ?? this.profile,
     );
   }
 }
@@ -36,45 +42,56 @@ class AuthState {
 // Travail avec NotifierListener
 
 class AuthNotifier extends StateNotifier<AuthState> {
-  AuthNotifier() : super(const AuthState());
+  final AuthService _authService;
+  AuthNotifier(this._authService) : super(const AuthState(isLoading: true)) {
+    _init();
+  }
 
-  final _supabase = Supabase.instance.client;
+  void _init() {
+    final session = supabase.auth.currentSession;
+    if (session != null) {
+      _loadProfile();
+    } else {
+      state = const AuthState();
+    }
+    supabase.auth.onAuthStateChange.listen((data) {
+      if (data.event == AuthChangeEvent.signedIn) {
+        _loadProfile();
+      } else if (data.event == AuthChangeEvent.signedOut) {
+        state = const AuthState();
+      }
+    });
+  }
+
+  Future<void> _loadProfile() async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final user = supabase.auth.currentUser;
+      print('User connecté : ${user?.email}');
+      final profile = await _authService.fetchCurrentProfile();
+      print('Profil chargé : ${profile?.role}');
+      state = AuthState(user: user, profile: profile, role: profile?.role);
+      print('State mis à jour : ${state.role}');
+    } catch (e) {
+      print('Erreur loadProfile : $e');
+      state = const AuthState();
+    }
+  }
 
   // Connexion et récup du role
   Future<String?> login(String email, String password) async {
     state = state.copyWith(isLoading: true);
-
     try {
-      final response = await _supabase.auth.signInWithPassword(
-        email: email,
-        password: password.trim(),
-      );
-
-      final user = response.user;
-      if (user == null) return "T'es qui ?";
-
-      final profile = await _supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', user.id)
-          .single();
-
-      final role = profile['role'] as String;
-
-      state = state.copyWith(isLoading: false, user: user, role: role);
-
+      await _authService.login(email, password);
       return null;
     } on AuthException catch (e) {
       state = state.copyWith(isLoading: false);
       return e.message;
-    } catch (e) {
-      state = state.copyWith(isLoading: false);
-      return 'Erreur, franchement pas cool';
     }
   }
 
   Future<void> logout() async {
-    await _supabase.auth.signOut();
+    await supabase.auth.signOut();
     state = const AuthState();
   }
 }
@@ -83,6 +100,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
 // Ecoute les changements d'états
 // Adapte l'UI en fonction des changements
 
+final authServiceProvider = Provider((ref) => AuthService());
+
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
-  (ref) => AuthNotifier(),
+  (ref) => AuthNotifier(ref.watch(authServiceProvider)),
 );

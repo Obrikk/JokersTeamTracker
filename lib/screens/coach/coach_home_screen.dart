@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jokers_team_tracker/providers/user/auth_provider.dart';
 import '../../core/theme/colors.dart';
 
+import '../../widgets/common/app_bar_widget.dart';
+
 class CoachDashboardScreen extends ConsumerStatefulWidget {
   const CoachDashboardScreen({super.key});
 
@@ -14,8 +16,12 @@ class CoachDashboardScreen extends ConsumerStatefulWidget {
 class _CoachDashboardScreenState extends ConsumerState<CoachDashboardScreen> {
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    final profile = authState.profile;
+
     return Scaffold(
       backgroundColor: AppColors.bgDark,
+      appBar: AppBarWidget(profil: profile),
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(32),
