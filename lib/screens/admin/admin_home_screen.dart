@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jokers_team_tracker/providers/user/auth_provider.dart';
-import '../../core/theme/colors.dart';
 
 class AdminDashboardScreen extends ConsumerStatefulWidget {
   const AdminDashboardScreen({super.key});
@@ -15,7 +14,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.bgDark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(32),
@@ -23,18 +22,19 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Card.filled(
-                color: Color(0XFF1A1A1A),
+                color: Theme.of(context).colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
                       const SizedBox(height: 32),
-                      const Text(
+                      Text(
                         'Dashboard Admin',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.green,
+                          color: Theme.of(context).colorScheme.primary,
+
                           letterSpacing: 2,
                         ),
                       ),

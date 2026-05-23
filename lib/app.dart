@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'providers/theme_provider.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/theme.dart';
-
 
 class HockeyApp extends ConsumerWidget {
   const HockeyApp({super.key});
@@ -10,6 +10,7 @@ class HockeyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
+    final themeMode = ref.watch(themeProvider);
 
     return MaterialApp.router(
       title: 'Hockey Team Tracker',
@@ -17,7 +18,7 @@ class HockeyApp extends ConsumerWidget {
 
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
 
       routerConfig: router,
     );

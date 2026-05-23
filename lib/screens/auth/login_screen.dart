@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jokers_team_tracker/core/theme/colors.dart';
 
 import '../../../providers/user/auth_provider.dart';
 import '../../core/router/app_router.dart';
@@ -50,7 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authProvider).isLoading;
     return Scaffold(
-      backgroundColor: Color(0xFF0D0D0D),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(32),
@@ -61,7 +60,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                color: AppColors.bgCardDark,
+                color: Theme.of(context).colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
@@ -71,47 +70,47 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         width: 100,
                         height: 100,
                         decoration: BoxDecoration(
-                          color: AppColors.bgDark,
+                          color: Theme.of(context).scaffoldBackgroundColor,
                           borderRadius: BorderRadius.all(Radius.circular(15.0)),
                         ),
 
                         child: const Icon(Icons.sports_hockey, size: 80),
                       ),
                       const SizedBox(height: 16),
-                      const Text(
+                      Text(
                         'Jokers',
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.w800,
-                          color: Color(0xFF00A651),
+                          color: Theme.of(context).colorScheme.primary,
                           letterSpacing: 4,
                         ),
                       ),
-                      const Text(
+                      Text(
                         'Cergy-Pontoise',
                         style: TextStyle(
                           fontSize: 11,
-                          color: Color(0xFFA0A0A0),
+                          color: Theme.of(context).colorScheme.onSecondary,
                           letterSpacing: 2,
                         ),
                       ),
                       const SizedBox(height: 32),
-                      const Text(
+                      Text(
                         'Connexion',
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
-                          color: Color(0xFFF0F0F0),
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                       const SizedBox(height: 32),
                       TextField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           labelText: 'Email',
                           floatingLabelStyle: TextStyle(
-                            color: Color(0xFF00A651),
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                           prefixIcon: Icon(Icons.email_outlined),
                         ),
@@ -123,7 +122,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         decoration: InputDecoration(
                           labelText: 'Mot de passe',
                           floatingLabelStyle: TextStyle(
-                            color: Color(0xFF00A651),
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                           prefixIcon: const Icon(Icons.lock_outlined),
                           suffixIcon: IconButton(
@@ -142,7 +141,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const SizedBox(height: 12),
                         Text(
                           _errorMessage!,
-                          style: const TextStyle(color: Colors.red),
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ],
@@ -156,21 +157,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               states,
                             ) {
                               if (states.contains(WidgetState.hovered)) {
-                                return Color(0xFF00C962);
+                                return Theme.of(
+                                  context,
+                                ).colorScheme.primaryContainer;
                               }
-                              return Color(0xFF00A651);
+                              return Theme.of(context).colorScheme.primary;
                             }),
                             foregroundColor: WidgetStateProperty.all(
                               Colors.white,
                             ),
                           ),
                           child: isLoading
-                              ? const SizedBox(
+                              ? SizedBox(
                                   height: 20,
                                   width: 20,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
-                                    color: Colors.white,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                 )
                               : const Text('Se connecter'),

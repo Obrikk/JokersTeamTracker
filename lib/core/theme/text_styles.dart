@@ -11,7 +11,7 @@ class AppTextStyles {
     fontSize: 22,
     fontWeight: FontWeight.w700,
     fontFamily: 'Segoe UI',
-    color: AppColors.textPrimaryDark,
+    color: AppColors.greenLight,
     letterSpacing: -0.5,
   );
 
@@ -19,7 +19,7 @@ class AppTextStyles {
     fontSize: 20,
     fontWeight: FontWeight.w600,
     fontFamily: 'Segoe UI',
-    color: AppColors.textPrimaryDark,
+    color: AppColors.greenLight,
   );
 
   // Sous Titres
@@ -87,7 +87,7 @@ class AppTextStyles {
     fontSize: 22,
     fontWeight: FontWeight.w700,
     fontFamily: 'Segoe UI',
-    color: AppColors.textPrimaryLight,
+    color: AppColors.greenDark,
     letterSpacing: -0.5,
   );
 
@@ -95,7 +95,7 @@ class AppTextStyles {
     fontSize: 20,
     fontWeight: FontWeight.w600,
     fontFamily: 'Segoe UI',
-    color: AppColors.textPrimaryLight,
+    color: AppColors.greenDark,
   );
 
   // Sous titres

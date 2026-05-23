@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jokers_team_tracker/providers/user/auth_provider.dart';
-import '../../core/theme/colors.dart';
 
 import '../../widgets/common/app_bar_widget.dart';
 
@@ -21,7 +20,7 @@ class _MedicalDashboardScreenState
     final profile = authState.profile;
 
     return Scaffold(
-      backgroundColor: AppColors.bgDark,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBarWidget(profil: profile),
 
       body: Center(
@@ -31,20 +30,15 @@ class _MedicalDashboardScreenState
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Card.filled(
-                color: Color(0XFF1A1A1A),
+                color: Theme.of(context).colorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: Column(
                     children: [
                       const SizedBox(height: 32),
-                      const Text(
+                      Text(
                         'Dashboard Staff Médical',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          color: AppColors.green,
-                          letterSpacing: 2,
-                        ),
+                        style: Theme.of(context).textTheme.displayLarge,
                       ),
                       const SizedBox(height: 32),
                       OutlinedButton.icon(

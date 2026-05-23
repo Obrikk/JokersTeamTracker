@@ -27,11 +27,11 @@ class AppColors {
   // ----------- LIGHT THEME ---------------
 
   // Couleurs Fonds clairs
-  static const Color bgLight = Color(0xFFF6F1E8);
-  static const Color bgCardLight = Color(0xFFFDF8F2);
-  static const Color bgSidebarLight = Color(0xFFEDE4D8);
-  static const Color bgInputLight = Color(0xFFFAF5EE);
-  static const Color bgHoverLight = Color(0xFFE4D8C8);
+  static const Color bgLight = Color(0xFFF8F4EC);
+  static const Color bgCardLight = Color(0xFFEFE6D8);
+  static const Color bgSidebarLight = Color(0xFFE7DCCB);
+  static const Color bgInputLight = Color(0xFFF3ECE2);
+  static const Color bgHoverLight = Color(0xFFDDD0BE);
 
   // Couleurs Textes
   static const Color textPrimaryLight = Color(0xFF2C2926);
