@@ -26,6 +26,9 @@ class AppTheme {
     // Background
     scaffoldBackgroundColor: AppColors.bgDark,
 
+    // Icon
+    iconTheme: const IconThemeData(color: AppColors.iconDark),
+
     // AppBar
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.bgSidebarDark,
@@ -117,6 +120,9 @@ class AppTheme {
 
     // Background
     scaffoldBackgroundColor: AppColors.bgLight,
+
+    // Icon
+    iconTheme: const IconThemeData(color: AppColors.iconLight),
 
     // AppBar
     appBarTheme: const AppBarTheme(

@@ -2,9 +2,6 @@ import 'package:jokers_team_tracker/models/user/profiles_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/constants/supabase_constants.dart';
 
-//import '../../core/utils/role_helper.dart';
-//import '../../models/user_profile.dart';
-
 class AuthService {
   Future<AuthResponse> login(String email, String password) async {
     return await supabase.auth.signInWithPassword(

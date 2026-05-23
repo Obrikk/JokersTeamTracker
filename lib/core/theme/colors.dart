@@ -10,6 +10,9 @@ class AppColors {
   static const Color redDark = Color(0xFF9B0D23);
   static const Color redLight = Color(0xFFE8314F);
 
+  static const Color iconDark = Color(0xFFE8F5E9);
+  static const Color iconLight = Color(0xFF1B5E20);
+
   // ----------- DARK THEME ---------------
 
   // Couleurs Fonds sombres

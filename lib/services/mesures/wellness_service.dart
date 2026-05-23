@@ -15,7 +15,7 @@ class WellnessService {
     if (data == null) return null;
 
     return WellnessModel(
-      id: data['id'] as String,
+      id: data['id_wellness'] as String,
       joueurId: data['joueur_id'] as String,
       date: DateTime.parse(data['date'] as String),
       sommeil: data['sommeil'] as int,
