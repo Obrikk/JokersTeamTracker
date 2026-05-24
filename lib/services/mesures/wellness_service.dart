@@ -2,9 +2,15 @@ import '../../core/constants/supabase_constants.dart';
 import '../../models/mesures/wellness_model.dart';
 
 class WellnessService {
-  final today = DateTime.now().toIso8601String().split('T').first;
+  Future<void> saveToday(WellnessModel model) async {
+    await supabase
+        .from('wellness')
+        .upsert(model.toMap(), onConflict: 'joueur_id, date');
+  }
 
   Future<WellnessModel?> getTodayWellness(String playerId) async {
+    final today = DateTime.now().toIso8601String().split('T').first;
+
     final data = await supabase
         .from('wellness')
         .select()
@@ -15,7 +21,6 @@ class WellnessService {
     if (data == null) return null;
 
     return WellnessModel(
-      id: data['id_wellness'] as String,
       joueurId: data['joueur_id'] as String,
       date: DateTime.parse(data['date'] as String),
       sommeil: data['sommeil'] as int,
@@ -37,6 +42,8 @@ class WellnessService {
   }
 
   Future<List<WellnessModel>> getTodayWellnessAllPlayers() async {
+    final today = DateTime.now().toIso8601String().split('T').first;
+
     final data = await supabase
         .from('wellness')
         .select()
@@ -47,6 +54,8 @@ class WellnessService {
   }
 
   Future<Map<String, double>> getTodayWellnessAverages() async {
+    final today = DateTime.now().toIso8601String().split('T').first;
+
     final data = await supabase
         .from('wellness')
         .select('sommeil, humeur, energie, courbatures, stress')
@@ -82,5 +91,30 @@ class WellnessService {
       'courbatures': totals['courbatures']! / count,
       'stress': totals['stress']! / count,
     };
+  }
+
+  Future<int> getTodayWellnessTotal(String playerId) async {
+    final today = DateTime.now().toIso8601String().split('T').first;
+
+    final data = await supabase
+        .from('wellness')
+        .select('sommeil, humeur, energie, courbatures, stress')
+        .eq('joueur_id', playerId)
+        .eq('date', today);
+
+    if ((data as List).isEmpty) return 0;
+
+    final total = data.fold<int>(
+      0,
+      (sum, e) =>
+          sum +
+          (e['sommeil'] as int) +
+          (e['humeur'] as int) +
+          (e['energie'] as int) +
+          (e['courbatures'] as int) +
+          (e['stress'] as int),
+    );
+
+    return total;
   }
 }

@@ -1,5 +1,4 @@
 class WellnessModel {
-  final String id;
   final String joueurId;
   final DateTime date;
   final int sommeil;
@@ -9,7 +8,6 @@ class WellnessModel {
   final int stress;
 
   const WellnessModel({
-    required this.id,
     required this.joueurId,
     required this.date,
     required this.sommeil,
@@ -21,7 +19,6 @@ class WellnessModel {
 
   factory WellnessModel.fromMap(Map<String, dynamic> map) {
     return WellnessModel(
-      id: map['id'] as String,
       joueurId: map['joueur_id'] as String,
       date: DateTime.parse(map['date']),
       sommeil: map['sommeil'] as int,
@@ -32,9 +29,8 @@ class WellnessModel {
     );
   }
   Map<String, dynamic> toMap() => {
-    'id': id,
     'joueur_id': joueurId,
-    'date': date,
+    'date': date.toIso8601String().split('T').first,
     'sommeil': sommeil,
     'humeur': humeur,
     'energie': energie,

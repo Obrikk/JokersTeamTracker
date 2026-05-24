@@ -11,7 +11,7 @@ class AppColors {
   static const Color redLight = Color(0xFFE8314F);
 
   static const Color iconDark = Color(0xFFE8F5E9);
-  static const Color iconLight = Color(0xFF1B5E20);
+  static const Color iconLight = Color(0xFF1C2A38);
 
   // ----------- DARK THEME ---------------
 
@@ -30,8 +30,8 @@ class AppColors {
   // ----------- LIGHT THEME ---------------
 
   // Couleurs Fonds clairs
-  static const Color bgLight = Color(0xFFF8F4EC);
-  static const Color bgCardLight = Color(0xFFEFE6D8);
+  static const Color bgLight = Color(0xFFF7F5EE);
+  static const Color bgCardLight = Color(0xFFEAECEE);
   static const Color bgSidebarLight = Color(0xFFE7DCCB);
   static const Color bgInputLight = Color(0xFFF3ECE2);
   static const Color bgHoverLight = Color(0xFFDDD0BE);
@@ -41,5 +41,7 @@ class AppColors {
   static const Color textSecondaryLight = Color(0xFF6F665D);
   static const Color textMutedLight = Color(0xFFA89F96);
 
+  // Couleurs Boutons
+  static const Color colorButton = Color(0xFF008F4C);
   static const Color textOnButton = Color(0xFFFDFBF8);
 }

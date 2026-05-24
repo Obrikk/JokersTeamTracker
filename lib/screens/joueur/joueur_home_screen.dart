@@ -25,6 +25,13 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
   late Future<WellnessModel?> _wellnessFuture;
 
   final userId = supabase.auth.currentUser!.id;
+  int _wellnessTotal = 0;
+
+  int _sommeil = 0;
+  int _humeur = 0;
+  int _energie = 0;
+  int _courbatures = 0;
+  int _stress = 0;
 
   @override
   void initState() {
@@ -36,7 +43,39 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
     final joueurId = await _joueurService.getPlayerId(userId);
     final wellness = await _wellnessService.getTodayWellness(joueurId);
 
+    if (wellness != null) {
+      setState(() {
+        _sommeil = wellness.sommeil;
+        _humeur = wellness.humeur;
+        _energie = wellness.energie;
+        _courbatures = wellness.courbatures;
+        _stress = wellness.stress;
+        _wellnessTotal =
+            wellness.sommeil +
+            wellness.humeur +
+            wellness.energie +
+            wellness.courbatures +
+            wellness.stress;
+      });
+    }
+
     return wellness;
+  }
+
+  Future<void> _saveWellness() async {
+    final joueurId = await _joueurService.getPlayerId(userId);
+
+    final model = WellnessModel(
+      joueurId: joueurId,
+      date: DateTime.now(),
+      sommeil: _sommeil,
+      humeur: _humeur,
+      energie: _energie,
+      courbatures: _courbatures,
+      stress: _stress,
+    );
+
+    await _wellnessService.saveToday(model);
   }
 
   @override
@@ -59,6 +98,7 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                 width: double.infinity,
                 child: Card.filled(
                   color: Theme.of(context).colorScheme.surface,
+
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Column(
@@ -84,8 +124,10 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
 
               const SizedBox(height: 32),
 
-              // Carte Wellness
+              // Carte Wellness 1
               Card(
+                color: Theme.of(context).colorScheme.surface,
+
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -95,7 +137,7 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Wellness :',
+                            'Wellness 1 :',
                             style: Theme.of(context).textTheme.displayLarge,
                           ),
                           Text(
@@ -104,25 +146,58 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                           ),
                         ],
                       ),
+
                       const SizedBox(height: 32),
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Icon(Icons.nights_stay),
-                          Icon(Icons.mood),
-                          Icon(Icons.battery_charging_full),
-                          Icon(Icons.accessible),
-                          Icon(Icons.cached),
-                        ],
+                      _buildWellnessSection1(),
+                      const SizedBox(height: 32),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          child: const Text('Remplir mon wellness'),
+                        ),
                       ),
                       const SizedBox(height: 16),
-                      _buildWellnessSection(),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Carte Wellness 2
+              Card(
+                color: Theme.of(context).colorScheme.surface,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Wellness 2 :',
+                            style: Theme.of(context).textTheme.displayLarge,
+                          ),
+                          Text(
+                            'Etat de forme | 0 - 5',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+
                       const SizedBox(height: 32),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigator.pushNamed(context, '/wellness-form');
-                        },
-                        child: const Text('Remplir mon wellness'),
+                      _buildWellnessSection2(),
+                      const SizedBox(height: 32),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await _saveWellness();
+                            _wellnessFuture = _loadWellness();
+                          },
+                          child: const Text('Enregistrer Wellness'),
+                        ),
                       ),
                       const SizedBox(height: 16),
                     ],
@@ -136,6 +211,7 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                 width: double.infinity,
                 child: Card.filled(
                   color: Theme.of(context).colorScheme.surface,
+
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Column(
@@ -215,6 +291,7 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                     Expanded(
                       child: Card.filled(
                         color: Theme.of(context).colorScheme.surface,
+
                         child: Padding(
                           padding: const EdgeInsets.all(24),
                           child: Column(
@@ -252,6 +329,7 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                     Expanded(
                       child: Card.filled(
                         color: Theme.of(context).colorScheme.surface,
+
                         child: Padding(
                           padding: const EdgeInsets.all(24),
                           child: Column(
@@ -295,7 +373,7 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
     );
   }
 
-  Widget _buildWellnessSection() {
+  Widget _buildWellnessSection1() {
     return FutureBuilder<WellnessModel?>(
       future: _wellnessFuture,
       builder: (context, snapshot) {
@@ -309,74 +387,345 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
 
         final wellness = snapshot.data;
         if (wellness == null) {
-          return _buildNoWellnessCard();
+          return _buildNoWellnessCard1();
         }
 
-        return _buildWellnessCard(wellness);
+        return _buildWellnessCard1(wellness, _wellnessTotal);
       },
     );
   }
 
-  Widget _buildWellnessCard(WellnessModel wellness) {
+  Widget _buildWellnessCard1(WellnessModel wellness, wellnessTotal) {
+    final color = _getColor(_wellnessTotal * 4);
+
     final selections = [
       wellness.sommeil,
       wellness.humeur,
-      wellness.humeur,
+      wellness.energie,
       wellness.courbatures,
       wellness.stress,
     ];
+    final iconSelection = [
+      Icon(Icons.nights_stay),
+      Icon(Icons.mood),
+      Icon(Icons.bolt),
+      Icon(Icons.fitness_center),
+      Icon(Icons.cached),
+    ];
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(5, (index) {
-        int? value = selections[index];
-        Color squareColor = _getGradientColor(value);
-        return Container(
-          width: 35,
-          height: 35,
-          decoration: BoxDecoration(
-            color: squareColor,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Center(
-            child: Text(
-              '$value',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SizedBox(
+            width: 80,
+            height: 80,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                CircularProgressIndicator(
+                  value: wellnessTotal / 25,
+                  strokeWidth: 8,
+                  backgroundColor: Colors.white24,
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                ),
+                Center(
+                  child: Text(
+                    '${wellnessTotal * 4}%',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                ),
+              ],
             ),
           ),
-        );
-      }),
+        ),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(5, (index) {
+              int? value = selections[index];
+              Color squareColor = _getGradientColor(value);
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  iconSelection[index],
+                  const SizedBox(height: 8),
+                  Container(
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      color: squareColor,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '$value',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
+          ),
+        ),
+      ],
     );
   }
 
-  Widget _buildNoWellnessCard() {
+  Widget _buildNoWellnessCard1() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: List.generate(5, (index) {
-        Color squareColor = Color(0xFFA9A9A9);
-
-        return Container(
-          width: 35,
-          height: 35,
-          decoration: BoxDecoration(
-            color: squareColor,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          child: Center(
-            child: Text(
-              '?',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SizedBox(
+            width: 80,
+            height: 80,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                CircularProgressIndicator(
+                  value: 0 / 25,
+                  strokeWidth: 8,
+                  backgroundColor: Colors.white24,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                ),
+                Center(
+                  child: Text(
+                    '0%',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                ),
+              ],
             ),
           ),
-        );
-      }),
+        ),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: List.generate(5, (index) {
+              Color squareColor = Color(0xFFA9A9A9);
+
+              return Container(
+                width: 35,
+                height: 35,
+                decoration: BoxDecoration(
+                  color: squareColor,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Center(
+                  child: Text(
+                    '?',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              );
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWellnessSection2() {
+    return FutureBuilder<WellnessModel?>(
+      future: _wellnessFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Text('Erreur : ${snapshot.error}');
+        }
+
+        final wellness = snapshot.data;
+        if (wellness == null) {
+          return _buildNoWellnessCard2();
+        }
+
+        return _buildWellnessCard2(wellness, _wellnessTotal);
+      },
+    );
+  }
+
+  Widget _buildWellnessCard2(WellnessModel wellness, wellnessTotal) {
+    final color = _getColor(_wellnessTotal * 4);
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SizedBox(
+            width: 80,
+            height: 80,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                CircularProgressIndicator(
+                  value: wellnessTotal / 25,
+                  strokeWidth: 8,
+                  backgroundColor: Colors.white24,
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                ),
+                Center(
+                  child: Text(
+                    '${wellnessTotal * 4}%',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              MetricRow(
+                label: 'Sommeil',
+                icon: Icons.nights_stay,
+                initialValue: _sommeil,
+                onChanged: (val) {
+                  setState(() => _sommeil = val);
+                },
+              ),
+              MetricRow(
+                label: 'Humeur',
+                icon: Icons.mood,
+                initialValue: _humeur,
+                onChanged: (val) {
+                  setState(() => _humeur = val);
+                },
+              ),
+              MetricRow(
+                label: 'Énergie',
+                icon: Icons.bolt,
+                initialValue: wellness.energie,
+                onChanged: (val) {
+                  setState(() => _energie = val);
+                },
+              ),
+              MetricRow(
+                label: 'Courbatures',
+                icon: Icons.fitness_center,
+                initialValue: wellness.courbatures,
+                onChanged: (val) {
+                  setState(() => _courbatures = val);
+                },
+              ),
+              MetricRow(
+                label: 'Stress',
+                icon: Icons.cached,
+                initialValue: wellness.stress,
+                onChanged: (val) {
+                  setState(() => _stress = val);
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNoWellnessCard2() {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SizedBox(
+            width: 80,
+            height: 80,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                CircularProgressIndicator(
+                  value: 0 / 25,
+                  strokeWidth: 8,
+                  backgroundColor: Colors.white24,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                ),
+                Center(
+                  child: Text(
+                    '0%',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              _buildMetricRow('Sommeil', 0, Icons.nights_stay),
+              _buildMetricRow('Humeur', 0, Icons.mood),
+              _buildMetricRow('Énergie', 0, Icons.bolt),
+              _buildMetricRow('Courbatures', 0, Icons.fitness_center),
+              _buildMetricRow('Stress', 0, Icons.cached),
+
+              MetricRow(
+                label: 'Sommeil',
+                icon: Icons.nights_stay,
+                initialValue: _sommeil,
+                onChanged: (val) => setState(() => _sommeil = val),
+              ),
+              MetricRow(
+                label: 'Humeur',
+                icon: Icons.mood,
+                initialValue: _humeur,
+                onChanged: (val) => setState(() => _humeur = val),
+              ),
+              MetricRow(
+                label: 'Énergie',
+                icon: Icons.bolt,
+                initialValue: _energie,
+                onChanged: (val) => setState(() => _energie = val),
+              ),
+              MetricRow(
+                label: 'Courbatures',
+                icon: Icons.fitness_center,
+                initialValue: _courbatures,
+                onChanged: (val) => setState(() => _courbatures = val),
+              ),
+              MetricRow(
+                label: 'Stress',
+                icon: Icons.cached,
+                initialValue: _stress,
+                onChanged: (val) => setState(() => _stress = val),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMetricRow(String label, int value, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Icon(icon, size: 20),
+          const SizedBox(width: 8),
+          SizedBox(width: 100, child: Text(label)),
+          Expanded(
+            child: LinearProgressIndicator(
+              value: value / 5,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text('$value/5'),
+        ],
+      ),
     );
   }
 
@@ -390,5 +739,92 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
       Color(0xFF1B5E20), // vert foncé
     ];
     return colors[index];
+  }
+
+  Color _getColor(double percentage) {
+    if (percentage <= 40) return const Color(0xFFB71C1C);
+    if (percentage <= 70) return const Color(0xFFF57F17);
+    return const Color(0xFF1B5E20);
+  }
+}
+
+class MetricRow extends StatefulWidget {
+  final String label;
+  final int initialValue;
+  final IconData icon;
+  final ValueChanged<int> onChanged;
+
+  const MetricRow({
+    super.key,
+    required this.label,
+    required this.initialValue,
+    required this.icon,
+    required this.onChanged,
+  });
+
+  @override
+  State<MetricRow> createState() => _MetricRowState();
+}
+
+class _MetricRowState extends State<MetricRow> {
+  late int _value;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.initialValue;
+  }
+
+  void _decrement() {
+    if (_value > 0) {
+      setState(() => _value--);
+      widget.onChanged(_value);
+    }
+  }
+
+  void _increment() {
+    if (_value < 5) {
+      setState(() => _value++);
+      widget.onChanged(_value);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Icon(widget.icon, size: 20),
+          const SizedBox(width: 8),
+          SizedBox(width: 100, child: Text(widget.label)),
+          Expanded(
+            child: LinearProgressIndicator(
+              value: _value / 5,
+              minHeight: 8,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Text('$_value/5'),
+          const SizedBox(width: 16),
+          IconButton(
+            icon: const Icon(Icons.remove_circle_outline),
+            onPressed: _value > 0 ? _decrement : null,
+            iconSize: 20,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            icon: const Icon(Icons.add_circle_outline),
+            onPressed: _value < 5 ? _increment : null,
+            iconSize: 20,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -38,9 +38,11 @@ class AppTheme {
     ),
 
     // Cards
-    cardTheme: const CardThemeData(
+    cardTheme: CardThemeData(
       color: AppColors.bgCardDark,
-      elevation: 0,
+      elevation: 10,
+      shadowColor: const Color(0xFF555555),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       margin: EdgeInsets.zero,
     ),
 
@@ -63,7 +65,7 @@ class AppTheme {
     // Boutons principaux
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.green,
+        backgroundColor: AppColors.colorButton,
         foregroundColor: AppColors.textOnButton,
         textStyle: AppTextStyles.buttonDark,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
@@ -133,9 +135,11 @@ class AppTheme {
     ),
 
     // Cards
-    cardTheme: const CardThemeData(
+    cardTheme: CardThemeData(
       color: AppColors.bgCardLight,
-      elevation: 0,
+      elevation: 10,
+      shadowColor: Color(0xFF000000),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       margin: EdgeInsets.zero,
     ),
 
