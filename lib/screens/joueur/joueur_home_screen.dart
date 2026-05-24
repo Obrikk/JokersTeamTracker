@@ -6,6 +6,8 @@ import '../../providers/user/auth_provider.dart';
 import '../../widgets/common/app_bar_widget.dart';
 import './mesures/wellness_form_screen.dart';
 import './mesures/rpe_form_screen.dart';
+import './mesures/grip_form_screen.dart';
+import './mesures/poids_form_screen.dart';
 
 class JoueurDashboardScreen extends ConsumerStatefulWidget {
   const JoueurDashboardScreen({super.key});
@@ -44,89 +46,24 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
               RpeForm(),
               const SizedBox(height: 32),
 
-              // Double Carte
+              // Double Carte TEST
               SizedBox(
                 width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     // Carte Poids
-                    Expanded(
-                      child: Card.filled(
-                        color: Theme.of(context).colorScheme.surface,
+                    Expanded(child: PoidsForm()),
 
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Poids :',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.displayLarge,
-                                  ),
-                                  Text(
-                                    'Poids du jour',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodySmall,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 32),
-                              const Text("Bouton"),
-                              const SizedBox(height: 16),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
                     const SizedBox(width: 16),
 
-                    // Carte Poids
-                    Expanded(
-                      child: Card.filled(
-                        color: Theme.of(context).colorScheme.surface,
-
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Grip :',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.displayLarge,
-                                  ),
-                                  Text(
-                                    'Force du Grip',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodySmall,
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 32),
-                              const Text("Bouton"),
-                              const SizedBox(height: 16),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Carte Grip
+                    Expanded(child: GripForm()),
+                    const SizedBox(width: 16),
                   ],
                 ),
               ),
+
               const SizedBox(height: 32),
 
               // Carte Planing

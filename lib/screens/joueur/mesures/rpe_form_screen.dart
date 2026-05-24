@@ -35,7 +35,7 @@ class _RpeFormState extends State<RpeForm> {
     _rpeFuture = _loadRpe();
   }
 
-  // Initialoser le rpe
+  // Initialiser le rpe
   Future<RpeModel?> _loadRpe() async {
     final joueurId = await _joueurService.getPlayerId(userId);
     final rpe = await _rpeService.getTodayRpe(joueurId);
