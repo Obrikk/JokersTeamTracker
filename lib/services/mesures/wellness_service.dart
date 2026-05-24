@@ -28,6 +28,8 @@ class WellnessService {
       energie: data['energie'] as int,
       courbatures: data['courbatures'] as int,
       stress: data['stress'] as int,
+      nom: data['joueur_nom'] as String,
+      prenom: data['joueur_prenom'] as String,
     );
   }
 

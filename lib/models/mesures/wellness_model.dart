@@ -6,6 +6,8 @@ class WellnessModel {
   final int energie;
   final int courbatures;
   final int stress;
+  final String nom;
+  final String prenom;
 
   const WellnessModel({
     required this.joueurId,
@@ -15,6 +17,8 @@ class WellnessModel {
     required this.energie,
     required this.courbatures,
     required this.stress,
+    required this.nom,
+    required this.prenom,
   });
 
   factory WellnessModel.fromMap(Map<String, dynamic> map) {
@@ -26,6 +30,8 @@ class WellnessModel {
       energie: map['energie'] as int,
       courbatures: map['courbatures'] as int,
       stress: map['stress'] as int,
+      nom: map['joueur_nom'] as String,
+      prenom: map['joueur_prenom'] as String,
     );
   }
   Map<String, dynamic> toMap() => {
@@ -36,5 +42,7 @@ class WellnessModel {
     'energie': energie,
     'courbatures': courbatures,
     'stress': stress,
+    'joueur_nom': nom,
+    'joueur_prenom': prenom,
   };
 }
