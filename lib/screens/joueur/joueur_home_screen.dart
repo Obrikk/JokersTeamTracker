@@ -5,6 +5,7 @@ import '../../providers/user/auth_provider.dart';
 
 import '../../widgets/common/app_bar_widget.dart';
 import './mesures/wellness_form_screen.dart';
+import './mesures/rpe_form_screen.dart';
 
 class JoueurDashboardScreen extends ConsumerStatefulWidget {
   const JoueurDashboardScreen({super.key});
@@ -40,7 +41,6 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                 width: double.infinity,
                 child: Card.filled(
                   color: Theme.of(context).colorScheme.surface,
-
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Column(
@@ -70,12 +70,14 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
               WellnessForm(),
               const SizedBox(height: 32),
 
+              // Carte RPE Test
+              RpeForm(),
+              const SizedBox(height: 32),
               // Carte RPE
               SizedBox(
                 width: double.infinity,
                 child: Card.filled(
                   color: Theme.of(context).colorScheme.surface,
-
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: Column(
@@ -84,6 +86,7 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            // En tête
                             Text(
                               'RPE :',
                               style: Theme.of(context).textTheme.displayLarge,

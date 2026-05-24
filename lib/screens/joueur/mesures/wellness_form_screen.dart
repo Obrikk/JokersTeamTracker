@@ -15,8 +15,9 @@ class WellnessForm extends StatefulWidget {
 
 class _WellnessFormState extends State<WellnessForm> {
   // Services Wellness => loadWellness, saveWellness
-  // Services Joueur => userId vers joueurId
   final WellnessService _wellnessService = WellnessService();
+
+  // Services Joueur => userId vers joueurId
   final JoueurService _joueurService = JoueurService();
   late Future<WellnessModel?> _wellnessFuture;
 
@@ -36,7 +37,7 @@ class _WellnessFormState extends State<WellnessForm> {
     _wellnessFuture = _loadWellness();
   }
 
-  // Initialiser le wellness au chargement
+  // Initialiser le wellness
   Future<WellnessModel?> _loadWellness() async {
     final joueurId = await _joueurService.getPlayerId(userId);
     final wellness = await _wellnessService.getTodayWellness(joueurId);
@@ -74,8 +75,8 @@ class _WellnessFormState extends State<WellnessForm> {
       energie: _energie,
       courbatures: _courbatures,
       stress: _stress,
-      nom: joueurNom,
-      prenom: joueurPrenom,
+      joueurNom: joueurNom,
+      joueurPrenom: joueurPrenom,
     );
 
     await _wellnessService.saveToday(model);
@@ -88,7 +89,6 @@ class _WellnessFormState extends State<WellnessForm> {
         // Carte Wellness 1
         Card(
           color: Theme.of(context).colorScheme.surface,
-
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -207,7 +207,7 @@ class _WellnessFormState extends State<WellnessForm> {
     final color = _getColor(_wellnessTotal * 4);
 
     // Valeurs du wellness
-    final selections = [
+    final valueSelection = [
       wellness.sommeil,
       wellness.humeur,
       wellness.energie,
@@ -258,7 +258,7 @@ class _WellnessFormState extends State<WellnessForm> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: List.generate(5, (index) {
-              int? value = selections[index];
+              int? value = valueSelection[index];
               Color squareColor = _getGradientColor(value);
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -294,6 +294,15 @@ class _WellnessFormState extends State<WellnessForm> {
 
   // Création Carte Vide n°1
   Widget _buildNoWellnessCard1() {
+    // Icons indicatifs
+    final iconSelection = [
+      Icon(Icons.nights_stay),
+      Icon(Icons.mood),
+      Icon(Icons.bolt),
+      Icon(Icons.fitness_center),
+      Icon(Icons.cached),
+    ];
+
     return Row(
       children: [
         Padding(
@@ -331,23 +340,30 @@ class _WellnessFormState extends State<WellnessForm> {
             children: List.generate(5, (index) {
               Color squareColor = Color(0xFFA9A9A9);
 
-              return Container(
-                width: 35,
-                height: 35,
-                decoration: BoxDecoration(
-                  color: squareColor,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Center(
-                  child: Text(
-                    '?',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  iconSelection[index],
+                  const SizedBox(height: 8),
+                  Container(
+                    width: 35,
+                    height: 35,
+                    decoration: BoxDecoration(
+                      color: squareColor,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '?',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               );
             }),
           ),

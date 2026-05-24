@@ -8,13 +8,13 @@ class WellnessService {
         .upsert(model.toMap(), onConflict: 'joueur_id, date');
   }
 
-  Future<WellnessModel?> getTodayWellness(String playerId) async {
+  Future<WellnessModel?> getTodayWellness(String joueurId) async {
     final today = DateTime.now().toIso8601String().split('T').first;
 
     final data = await supabase
         .from('wellness')
         .select()
-        .eq('joueur_id', playerId)
+        .eq('joueur_id', joueurId)
         .eq('date', today)
         .maybeSingle();
 
@@ -28,16 +28,16 @@ class WellnessService {
       energie: data['energie'] as int,
       courbatures: data['courbatures'] as int,
       stress: data['stress'] as int,
-      nom: data['joueur_nom'] as String,
-      prenom: data['joueur_prenom'] as String,
+      joueurNom: data['joueur_nom'] as String,
+      joueurPrenom: data['joueur_prenom'] as String,
     );
   }
 
-  Future<List<WellnessModel>> getWellnessHistory(String playerId) async {
+  Future<List<WellnessModel>> getWellnessHistory(String joueurId) async {
     final data = await supabase
         .from('wellness')
         .select()
-        .eq('joueur_id', playerId)
+        .eq('joueur_id', joueurId)
         .order('date', ascending: true);
 
     return (data as List).map((e) => WellnessModel.fromMap(e)).toList();
@@ -50,7 +50,7 @@ class WellnessService {
         .from('wellness')
         .select()
         .eq('date', today)
-        .order('nom', ascending: true);
+        .order('joueur_nom', ascending: true);
 
     return (data as List).map((e) => WellnessModel.fromMap(e)).toList();
   }
@@ -95,13 +95,13 @@ class WellnessService {
     };
   }
 
-  Future<int> getTodayWellnessTotal(String playerId) async {
+  Future<int> getTodayWellnessTotal(String joueurId) async {
     final today = DateTime.now().toIso8601String().split('T').first;
 
     final data = await supabase
         .from('wellness')
         .select('sommeil, humeur, energie, courbatures, stress')
-        .eq('joueur_id', playerId)
+        .eq('joueur_id', joueurId)
         .eq('date', today);
 
     if ((data as List).isEmpty) return 0;
