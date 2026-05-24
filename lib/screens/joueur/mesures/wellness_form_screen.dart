@@ -175,6 +175,53 @@ class _WellnessFormState extends State<WellnessForm> {
             ),
           ),
         ),
+        const SizedBox(height: 32),
+
+        // Carte Wellness 3
+        Card(
+          color: Theme.of(context).colorScheme.surface,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // En tête
+                    Text(
+                      'Wellness 3 :',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                    Text(
+                      'Etat de forme | 0 - 5',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 32),
+
+                // Appel création de la carte
+                _buildWellnessSection3(),
+
+                const SizedBox(height: 32),
+                SizedBox(
+                  // Bouton Sauvegarde
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await _saveWellness();
+                      _wellnessFuture = _loadWellness();
+                    },
+                    child: const Text('Enregistrer Wellness'),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -264,7 +311,7 @@ class _WellnessFormState extends State<WellnessForm> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   iconSelection[index],
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   Container(
                     width: 35,
                     height: 35,
@@ -344,7 +391,7 @@ class _WellnessFormState extends State<WellnessForm> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   iconSelection[index],
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   Container(
                     width: 35,
                     height: 35,
@@ -403,15 +450,15 @@ class _WellnessFormState extends State<WellnessForm> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SizedBox(
-            width: 80,
-            height: 80,
+            width: 70,
+            height: 70,
             child: Stack(
               fit: StackFit.expand,
               children: [
                 // Cercle de Progression
                 CircularProgressIndicator(
                   value: wellnessTotal / 25,
-                  strokeWidth: 8,
+                  strokeWidth: 6,
                   backgroundColor: Colors.white24,
                   valueColor: AlwaysStoppedAnimation<Color>(color),
                 ),
@@ -481,6 +528,188 @@ class _WellnessFormState extends State<WellnessForm> {
 
   // Création Carte Vide n°2
   Widget _buildNoWellnessCard2() {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SizedBox(
+            width: 80,
+            height: 80,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Cercle de progression vide
+                CircularProgressIndicator(
+                  value: 0 / 25,
+                  strokeWidth: 8,
+                  backgroundColor: Colors.white24,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                ),
+
+                // Pourcentage de progression
+                Center(
+                  child: Text(
+                    '0%',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Affichage des barres progressives
+        Expanded(
+          child: Column(
+            children: [
+              MetricRow(
+                label: 'Sommeil',
+                icon: Icons.nights_stay,
+                initialValue: _sommeil,
+                onChanged: (val) => setState(() => _sommeil = val),
+              ),
+              MetricRow(
+                label: 'Humeur',
+                icon: Icons.mood,
+                initialValue: _humeur,
+                onChanged: (val) => setState(() => _humeur = val),
+              ),
+              MetricRow(
+                label: 'Énergie',
+                icon: Icons.bolt,
+                initialValue: _energie,
+                onChanged: (val) => setState(() => _energie = val),
+              ),
+              MetricRow(
+                label: 'Courbatures',
+                icon: Icons.fitness_center,
+                initialValue: _courbatures,
+                onChanged: (val) => setState(() => _courbatures = val),
+              ),
+              MetricRow(
+                label: 'Stress',
+                icon: Icons.cached,
+                initialValue: _stress,
+                onChanged: (val) => setState(() => _stress = val),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Initialisation Carte n°3
+  Widget _buildWellnessSection3() {
+    return FutureBuilder<WellnessModel?>(
+      future: _wellnessFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Text('Erreur : ${snapshot.error}');
+        }
+
+        final wellness = snapshot.data;
+        if (wellness == null) {
+          return _buildNoWellnessCard3();
+        }
+
+        return _buildWellnessCard3(wellness, _wellnessTotal);
+      },
+    );
+  }
+
+  // Création Carte n°3
+  Widget _buildWellnessCard3(WellnessModel wellness, wellnessTotal) {
+    final color = _getColor(_wellnessTotal * 4);
+
+    return Row(
+      children: [
+        // Affichage des barres progressives
+        Expanded(
+          child: Column(
+            children: [
+              MetricRow(
+                label: 'Sommeil',
+                icon: Icons.nights_stay,
+                initialValue: _sommeil,
+                onChanged: (val) {
+                  setState(() => _sommeil = val);
+                },
+              ),
+              MetricRow(
+                label: 'Humeur',
+                icon: Icons.mood,
+                initialValue: _humeur,
+                onChanged: (val) {
+                  setState(() => _humeur = val);
+                },
+              ),
+              MetricRow(
+                label: 'Énergie',
+                icon: Icons.bolt,
+                initialValue: wellness.energie,
+                onChanged: (val) {
+                  setState(() => _energie = val);
+                },
+              ),
+              MetricRow(
+                label: 'Courbatures',
+                icon: Icons.fitness_center,
+                initialValue: wellness.courbatures,
+                onChanged: (val) {
+                  setState(() => _courbatures = val);
+                },
+              ),
+              MetricRow(
+                label: 'Stress',
+                icon: Icons.cached,
+                initialValue: wellness.stress,
+                onChanged: (val) {
+                  setState(() => _stress = val);
+                },
+              ),
+              const SizedBox(height: 16),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      // Cercle de Progression
+                      CircularProgressIndicator(
+                        value: wellnessTotal / 25,
+                        strokeWidth: 8,
+                        backgroundColor: Colors.white24,
+                        valueColor: AlwaysStoppedAnimation<Color>(color),
+                      ),
+
+                      // Pourcentage de progression
+                      Center(
+                        child: Text(
+                          '${wellnessTotal * 4}%',
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Création Carte Vide n°3
+  Widget _buildNoWellnessCard3() {
     return Row(
       children: [
         Padding(
@@ -624,7 +853,7 @@ class _MetricRowState extends State<MetricRow> {
           // Icon + Text indicatif
           Icon(widget.icon, size: 20),
           const SizedBox(width: 8),
-          SizedBox(width: 100, child: Text(widget.label)),
+          //SizedBox(width: 85, child: Text(widget.label)),
 
           // Barre progressive
           Expanded(
@@ -638,7 +867,7 @@ class _MetricRowState extends State<MetricRow> {
 
           // Résultat
           Text('$_value/5'),
-          const SizedBox(width: 16),
+          const SizedBox(width: 8),
 
           // Bouton +
           IconButton(
@@ -648,8 +877,6 @@ class _MetricRowState extends State<MetricRow> {
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
           ),
-          const SizedBox(width: 8),
-
           // Bouton -
           IconButton(
             icon: const Icon(Icons.add_circle_outline),

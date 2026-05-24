@@ -32,40 +32,10 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
       body: SafeArea(
         top: true,
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(32),
+          padding: EdgeInsets.all(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Carte Planing
-              SizedBox(
-                width: double.infinity,
-                child: Card.filled(
-                  color: Theme.of(context).colorScheme.surface,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Planning :',
-                              style: Theme.of(context).textTheme.displayLarge,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 32),
-                        const Text("Bouton"),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 32),
-
               // Cartes Wellness ./mesures/wellness_form_screen.dart
               WellnessForm(),
               const SizedBox(height: 32),
@@ -73,81 +43,7 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
               // Carte RPE Test
               RpeForm(),
               const SizedBox(height: 32),
-              // Carte RPE
-              SizedBox(
-                width: double.infinity,
-                child: Card.filled(
-                  color: Theme.of(context).colorScheme.surface,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // En tête
-                            Text(
-                              'RPE :',
-                              style: Theme.of(context).textTheme.displayLarge,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Indicateur de difficulté : 1 - 10',
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 32),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  'RPE Musculaire',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.headlineMedium,
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  '7/10',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.headlineSmall,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  'RPE Cardio',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.headlineMedium,
-                                ),
-                                Text(
-                                  '6/10',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.headlineSmall,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 32),
-                        const Text("Bouton"),
 
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 32),
               // Double Carte
               SizedBox(
                 width: double.infinity,
@@ -229,6 +125,35 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                       ),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Carte Planing
+              SizedBox(
+                width: double.infinity,
+                child: Card.filled(
+                  color: Theme.of(context).colorScheme.surface,
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Planning :',
+                              style: Theme.of(context).textTheme.displayLarge,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 32),
+                        const Text("Bouton"),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
                 ),
               ),
 

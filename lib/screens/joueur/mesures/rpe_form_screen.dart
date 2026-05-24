@@ -160,7 +160,52 @@ class _RpeFormState extends State<RpeForm> {
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 32),
+
+        // Carte RPE 3
+        Card(
+          color: Theme.of(context).colorScheme.surface,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // En tête
+                    Text(
+                      'RPE 3 :',
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                    Text(
+                      'Difficulté | 1 - 10',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
+
+                //Appel création de la carte
+                _buildRpeSection3(),
+
+                const SizedBox(height: 32),
+                SizedBox(
+                  // Bouton Sauvegarde
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await _saveRpe();
+                      _rpeFuture = _loadRpe();
+                    },
+                    child: const Text('Enregistrer Wellness'),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -241,7 +286,7 @@ class _RpeFormState extends State<RpeForm> {
               return Column(
                 children: [
                   iconsSelection[index],
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   Container(
                     width: 35,
                     height: 35,
@@ -317,7 +362,7 @@ class _RpeFormState extends State<RpeForm> {
               return Column(
                 children: [
                   iconsSelection[index],
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   Container(
                     width: 35,
                     height: 35,
@@ -407,13 +452,13 @@ class _RpeFormState extends State<RpeForm> {
             children: [
               MetricRow(
                 label: 'Rpe M.',
-                icon: Icons.nights_stay,
+                icon: Icons.fitness_center,
                 initialValue: _rpem,
                 onChanged: (val) => setState(() => _rpem = val),
               ),
               MetricRow(
                 label: 'Rpe C.',
-                icon: Icons.mood,
+                icon: Icons.monitor_heart_outlined,
                 initialValue: _rpec,
                 onChanged: (val) => setState(() => _rpec = val),
               ),
@@ -462,13 +507,147 @@ class _RpeFormState extends State<RpeForm> {
             children: [
               MetricRow(
                 label: 'Rpe Musclaire',
-                icon: Icons.nights_stay,
+                icon: Icons.fitness_center,
                 initialValue: _rpem,
                 onChanged: (val) => setState(() => _rpem = val),
               ),
               MetricRow(
                 label: 'Rpe Cardio',
-                icon: Icons.mood,
+                icon: Icons.monitor_heart_outlined,
+                initialValue: _rpec,
+                onChanged: (val) => setState(() => _rpec = val),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Initialisation Carte n°3
+  Widget _buildRpeSection3() {
+    return FutureBuilder<RpeModel?>(
+      future: _rpeFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasError) {
+          return Text('Erreur : ${snapshot.error}');
+        }
+
+        final rpe = snapshot.data;
+        if (rpe == null) {
+          return _buildNoRpeCard3();
+        }
+
+        return _buildRpeCard3(rpe, _rpeTotal);
+      },
+    );
+  }
+
+  // Création Carte n°3
+  Widget _buildRpeCard3(RpeModel rpe, rpeTotal) {
+    final color = _getColor(_rpeTotal * 10);
+    return Row(
+      children: [
+        // Affichage des carrés avec leurs valeurs
+        Expanded(
+          child: Column(
+            children: [
+              MetricRow(
+                label: 'Rpe M.',
+                icon: Icons.fitness_center,
+                initialValue: _rpem,
+                onChanged: (val) => setState(() => _rpem = val),
+              ),
+              MetricRow(
+                label: 'Rpe C.',
+                icon: Icons.monitor_heart_outlined,
+                initialValue: _rpec,
+                onChanged: (val) => setState(() => _rpec = val),
+              ),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      // Cercle de Progression
+                      CircularProgressIndicator(
+                        value: rpeTotal / 20,
+                        strokeWidth: 8,
+                        backgroundColor: Colors.white24,
+                        valueColor: AlwaysStoppedAnimation<Color>(color),
+                      ),
+
+                      // Pourcentage de progression
+                      Center(
+                        child: Text(
+                          '${rpeTotal * 5}%',
+                          style: Theme.of(context).textTheme.displaySmall,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  // Création Carte Vide n°3
+  Widget _buildNoRpeCard3() {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: SizedBox(
+            width: 80,
+            height: 80,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Cercle de progression vide
+                CircularProgressIndicator(
+                  value: 0 / 20,
+                  strokeWidth: 8,
+                  backgroundColor: Colors.white24,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                ),
+
+                // Pourcentage de progression
+                Center(
+                  child: Text(
+                    '0%',
+                    style: Theme.of(context).textTheme.displaySmall,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        // Affichage des barres progressives
+        Expanded(
+          child: Column(
+            children: [
+              MetricRow(
+                label: 'Rpe Musclaire',
+                icon: Icons.fitness_center,
+                initialValue: _rpem,
+                onChanged: (val) => setState(() => _rpem = val),
+              ),
+              MetricRow(
+                label: 'Rpe Cardio',
+                icon: Icons.monitor_heart_outlined,
                 initialValue: _rpec,
                 onChanged: (val) => setState(() => _rpec = val),
               ),
@@ -554,8 +733,8 @@ class _MetricRowState extends State<MetricRow> {
         children: [
           // Icon + Text indicatif
           Icon(widget.icon, size: 20),
-          const SizedBox(width: 8),
-          SizedBox(width: 100, child: Text(widget.label)),
+          const SizedBox(width: 4),
+          SizedBox(width: 60, child: Text(widget.label)),
 
           // Barre progressive
           Expanded(
@@ -569,7 +748,7 @@ class _MetricRowState extends State<MetricRow> {
 
           // Résultat
           Text('$_value/10'),
-          const SizedBox(width: 16),
+          const SizedBox(width: 8),
 
           // Bouton +
           IconButton(
