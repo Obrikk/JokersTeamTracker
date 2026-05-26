@@ -22,7 +22,7 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       automaticallyImplyLeading: false,
       title: Text(
-        "Dashboard ${profil?.nom ?? 'rien'} ${profil?.prenom ?? 'du tout'} ",
+        "${profil?.nom ?? 'rien'} ${profil?.prenom ?? 'du tout'} ",
         style: Theme.of(context).appBarTheme.titleTextStyle,
       ),
       actions: [

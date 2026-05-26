@@ -38,7 +38,8 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Cartes Wellness ./mesures/wellness_form_screen.dart
+              // Cartes Wellness TEST
+              // ./mesures/wellness_form_screen.dart
               WellnessForm(),
               const SizedBox(height: 32),
 
@@ -47,17 +48,20 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
               const SizedBox(height: 32),
 
               // Double Carte TEST
+              // ./mesures/rpe_form_screen.dart
               SizedBox(
                 width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     // Carte Poids
+                    // ./mesures/poids_form_screen.dart
                     Expanded(child: PoidsForm()),
 
                     const SizedBox(width: 16),
 
                     // Carte Grip
+                    // ./mesures/grip_form_screen.dart
                     Expanded(child: GripForm()),
                     const SizedBox(width: 16),
                   ],

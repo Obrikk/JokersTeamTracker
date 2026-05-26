@@ -1,11 +1,11 @@
 class WellnessModel {
   final String joueurId;
   final DateTime date;
-  final int sommeil;
-  final int humeur;
-  final int energie;
-  final int courbatures;
-  final int stress;
+  final double sommeil;
+  final double humeur;
+  final double energie;
+  final double courbatures;
+  final double stress;
   final String joueurNom;
   final String joueurPrenom;
 
@@ -25,11 +25,11 @@ class WellnessModel {
     return WellnessModel(
       joueurId: map['joueur_id'] as String,
       date: DateTime.parse(map['date']),
-      sommeil: map['sommeil'] as int,
-      humeur: map['humeur'] as int,
-      energie: map['energie'] as int,
-      courbatures: map['courbatures'] as int,
-      stress: map['stress'] as int,
+      sommeil: map['sommeil'] as double,
+      humeur: map['humeur'] as double,
+      energie: map['energie'] as double,
+      courbatures: map['courbatures'] as double,
+      stress: map['stress'] as double,
       joueurNom: map['joueur_nom'] as String,
       joueurPrenom: map['joueur_prenom'] as String,
     );

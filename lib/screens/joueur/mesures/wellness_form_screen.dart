@@ -23,13 +23,13 @@ class _WellnessFormState extends State<WellnessForm> {
 
   // Variables du wellness
   final userId = supabase.auth.currentUser!.id;
-  int _wellnessTotal = 0;
+  double _wellnessTotal = 0;
 
-  int _sommeil = 0;
-  int _humeur = 0;
-  int _energie = 0;
-  int _courbatures = 0;
-  int _stress = 0;
+  double _sommeil = 0;
+  double _humeur = 0;
+  double _energie = 0;
+  double _courbatures = 0;
+  double _stress = 0;
 
   @override
   initState() {
@@ -78,7 +78,6 @@ class _WellnessFormState extends State<WellnessForm> {
       joueurNom: joueurNom,
       joueurPrenom: joueurPrenom,
     );
-
     await _wellnessService.saveToday(model);
   }
 
@@ -86,7 +85,7 @@ class _WellnessFormState extends State<WellnessForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Carte Wellness 1
+        // Carte Wellness
         Card(
           color: Theme.of(context).colorScheme.surface,
           child: Padding(
@@ -99,7 +98,7 @@ class _WellnessFormState extends State<WellnessForm> {
                   children: [
                     // En tête
                     Text(
-                      'Wellness 1 :',
+                      'Wellness :',
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                     Text(
@@ -112,99 +111,7 @@ class _WellnessFormState extends State<WellnessForm> {
                 const SizedBox(height: 32),
 
                 // Appel création de la carte
-                _buildWellnessSection1(),
-
-                const SizedBox(height: 32),
-                SizedBox(
-                  // Bouton Sauvegarde
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Remplir mon wellness'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 32),
-
-        // Carte Wellness 2
-        Card(
-          color: Theme.of(context).colorScheme.surface,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // En tête
-                    Text(
-                      'Wellness 2 :',
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    Text(
-                      'Etat de forme | 0 - 5',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 32),
-
-                // Appel création de la carte
-                _buildWellnessSection2(),
-
-                const SizedBox(height: 32),
-                SizedBox(
-                  // Bouton Sauvegarde
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await _saveWellness();
-                      _wellnessFuture = _loadWellness();
-                    },
-                    child: const Text('Enregistrer Wellness'),
-                  ),
-                ),
-                const SizedBox(height: 16),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 32),
-
-        // Carte Wellness 3
-        Card(
-          color: Theme.of(context).colorScheme.surface,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // En tête
-                    Text(
-                      'Wellness 3 :',
-                      style: Theme.of(context).textTheme.displayLarge,
-                    ),
-                    Text(
-                      'Etat de forme | 0 - 5',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 32),
-
-                // Appel création de la carte
-                _buildWellnessSection3(),
-
+                _buildWellnessSection(),
                 const SizedBox(height: 32),
                 SizedBox(
                   // Bouton Sauvegarde
@@ -226,8 +133,8 @@ class _WellnessFormState extends State<WellnessForm> {
     );
   }
 
-  // Initialisation Carte n°1
-  Widget _buildWellnessSection1() {
+  // Initialisation Carte
+  Widget _buildWellnessSection() {
     return FutureBuilder<WellnessModel?>(
       future: _wellnessFuture,
       builder: (context, snapshot) {
@@ -241,391 +148,16 @@ class _WellnessFormState extends State<WellnessForm> {
 
         final wellness = snapshot.data;
         if (wellness == null) {
-          return _buildNoWellnessCard1();
+          return _buildNoWellnessCard();
         }
 
-        return _buildWellnessCard1(wellness, _wellnessTotal);
-      },
-    );
-  }
-
-  // Création Carte n°1
-  Widget _buildWellnessCard1(WellnessModel wellness, wellnessTotal) {
-    final color = _getColor(_wellnessTotal * 4);
-
-    // Valeurs du wellness
-    final valueSelection = [
-      wellness.sommeil,
-      wellness.humeur,
-      wellness.energie,
-      wellness.courbatures,
-      wellness.stress,
-    ];
-
-    // Icons indicatifs
-    final iconSelection = [
-      Icon(Icons.nights_stay),
-      Icon(Icons.mood),
-      Icon(Icons.bolt),
-      Icon(Icons.fitness_center),
-      Icon(Icons.cached),
-    ];
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SizedBox(
-            width: 80,
-            height: 80,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // Cercle de Progression
-                CircularProgressIndicator(
-                  value: wellnessTotal / 25,
-                  strokeWidth: 8,
-                  backgroundColor: Colors.white24,
-                  valueColor: AlwaysStoppedAnimation<Color>(color),
-                ),
-
-                // Pourcentage de progression
-                Center(
-                  child: Text(
-                    '${wellnessTotal * 4}%',
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // Affichage des carrés avec leurs valeurs
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(5, (index) {
-              int? value = valueSelection[index];
-              Color squareColor = _getGradientColor(value);
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  iconSelection[index],
-                  const SizedBox(height: 16),
-                  Container(
-                    width: 35,
-                    height: 35,
-                    decoration: BoxDecoration(
-                      color: squareColor,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '$value',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Création Carte Vide n°1
-  Widget _buildNoWellnessCard1() {
-    // Icons indicatifs
-    final iconSelection = [
-      Icon(Icons.nights_stay),
-      Icon(Icons.mood),
-      Icon(Icons.bolt),
-      Icon(Icons.fitness_center),
-      Icon(Icons.cached),
-    ];
-
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SizedBox(
-            width: 80,
-            height: 80,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // Cercle de Progression
-                CircularProgressIndicator(
-                  value: 0 / 25,
-                  strokeWidth: 8,
-                  backgroundColor: Colors.white24,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-                ),
-
-                // Pourcentage de progression
-                Center(
-                  child: Text(
-                    '0%',
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // Affichage des carrés vides
-        Expanded(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: List.generate(5, (index) {
-              Color squareColor = Color(0xFFA9A9A9);
-
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  iconSelection[index],
-                  const SizedBox(height: 16),
-                  Container(
-                    width: 35,
-                    height: 35,
-                    decoration: BoxDecoration(
-                      color: squareColor,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '?',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Initialisation Carte n°2
-  Widget _buildWellnessSection2() {
-    return FutureBuilder<WellnessModel?>(
-      future: _wellnessFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Text('Erreur : ${snapshot.error}');
-        }
-
-        final wellness = snapshot.data;
-        if (wellness == null) {
-          return _buildNoWellnessCard2();
-        }
-
-        return _buildWellnessCard2(wellness, _wellnessTotal);
-      },
-    );
-  }
-
-  // Création Carte n°2
-  Widget _buildWellnessCard2(WellnessModel wellness, wellnessTotal) {
-    final color = _getColor(_wellnessTotal * 4);
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SizedBox(
-            width: 70,
-            height: 70,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // Cercle de Progression
-                CircularProgressIndicator(
-                  value: wellnessTotal / 25,
-                  strokeWidth: 6,
-                  backgroundColor: Colors.white24,
-                  valueColor: AlwaysStoppedAnimation<Color>(color),
-                ),
-
-                // Pourcentage de progression
-                Center(
-                  child: Text(
-                    '${wellnessTotal * 4}%',
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // Affichage des barres progressives
-        Expanded(
-          child: Column(
-            children: [
-              MetricRow(
-                label: 'Sommeil',
-                icon: Icons.nights_stay,
-                initialValue: _sommeil,
-                onChanged: (val) {
-                  setState(() => _sommeil = val);
-                },
-              ),
-              MetricRow(
-                label: 'Humeur',
-                icon: Icons.mood,
-                initialValue: _humeur,
-                onChanged: (val) {
-                  setState(() => _humeur = val);
-                },
-              ),
-              MetricRow(
-                label: 'Énergie',
-                icon: Icons.bolt,
-                initialValue: wellness.energie,
-                onChanged: (val) {
-                  setState(() => _energie = val);
-                },
-              ),
-              MetricRow(
-                label: 'Courbatures',
-                icon: Icons.fitness_center,
-                initialValue: wellness.courbatures,
-                onChanged: (val) {
-                  setState(() => _courbatures = val);
-                },
-              ),
-              MetricRow(
-                label: 'Stress',
-                icon: Icons.cached,
-                initialValue: wellness.stress,
-                onChanged: (val) {
-                  setState(() => _stress = val);
-                },
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Création Carte Vide n°2
-  Widget _buildNoWellnessCard2() {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SizedBox(
-            width: 80,
-            height: 80,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // Cercle de progression vide
-                CircularProgressIndicator(
-                  value: 0 / 25,
-                  strokeWidth: 8,
-                  backgroundColor: Colors.white24,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-                ),
-
-                // Pourcentage de progression
-                Center(
-                  child: Text(
-                    '0%',
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        // Affichage des barres progressives
-        Expanded(
-          child: Column(
-            children: [
-              MetricRow(
-                label: 'Sommeil',
-                icon: Icons.nights_stay,
-                initialValue: _sommeil,
-                onChanged: (val) => setState(() => _sommeil = val),
-              ),
-              MetricRow(
-                label: 'Humeur',
-                icon: Icons.mood,
-                initialValue: _humeur,
-                onChanged: (val) => setState(() => _humeur = val),
-              ),
-              MetricRow(
-                label: 'Énergie',
-                icon: Icons.bolt,
-                initialValue: _energie,
-                onChanged: (val) => setState(() => _energie = val),
-              ),
-              MetricRow(
-                label: 'Courbatures',
-                icon: Icons.fitness_center,
-                initialValue: _courbatures,
-                onChanged: (val) => setState(() => _courbatures = val),
-              ),
-              MetricRow(
-                label: 'Stress',
-                icon: Icons.cached,
-                initialValue: _stress,
-                onChanged: (val) => setState(() => _stress = val),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  // Initialisation Carte n°3
-  Widget _buildWellnessSection3() {
-    return FutureBuilder<WellnessModel?>(
-      future: _wellnessFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Text('Erreur : ${snapshot.error}');
-        }
-
-        final wellness = snapshot.data;
-        if (wellness == null) {
-          return _buildNoWellnessCard3();
-        }
-
-        return _buildWellnessCard3(wellness, _wellnessTotal);
+        return _buildWellnessCard(wellness, _wellnessTotal);
       },
     );
   }
 
   // Création Carte n°3
-  Widget _buildWellnessCard3(WellnessModel wellness, wellnessTotal) {
-    final color = _getColor(_wellnessTotal * 4);
-
+  Widget _buildWellnessCard(WellnessModel wellness, double wellnessTotal) {
     return Row(
       children: [
         // Affichage des barres progressives
@@ -671,35 +203,6 @@ class _WellnessFormState extends State<WellnessForm> {
                 onChanged: (val) {
                   setState(() => _stress = val);
                 },
-              ),
-              const SizedBox(height: 16),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: SizedBox(
-                  width: 100,
-                  height: 100,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      // Cercle de Progression
-                      CircularProgressIndicator(
-                        value: wellnessTotal / 25,
-                        strokeWidth: 8,
-                        backgroundColor: Colors.white24,
-                        valueColor: AlwaysStoppedAnimation<Color>(color),
-                      ),
-
-                      // Pourcentage de progression
-                      Center(
-                        child: Text(
-                          '${wellnessTotal * 4}%',
-                          style: Theme.of(context).textTheme.displaySmall,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
               ),
             ],
           ),
@@ -709,105 +212,53 @@ class _WellnessFormState extends State<WellnessForm> {
   }
 
   // Création Carte Vide n°3
-  Widget _buildNoWellnessCard3() {
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: SizedBox(
-            width: 80,
-            height: 80,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // Cercle de progression vide
-                CircularProgressIndicator(
-                  value: 0 / 25,
-                  strokeWidth: 8,
-                  backgroundColor: Colors.white24,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
-                ),
-
-                // Pourcentage de progression
-                Center(
-                  child: Text(
-                    '0%',
-                    style: Theme.of(context).textTheme.displaySmall,
-                  ),
-                ),
-              ],
-            ),
+  Widget _buildNoWellnessCard() {
+    return Expanded(
+      // Affichage des barres progressives
+      child: Column(
+        children: [
+          MetricRow(
+            label: 'Sommeil',
+            icon: Icons.nights_stay,
+            initialValue: _sommeil,
+            onChanged: (val) => setState(() => _sommeil = val),
           ),
-        ),
-
-        // Affichage des barres progressives
-        Expanded(
-          child: Column(
-            children: [
-              MetricRow(
-                label: 'Sommeil',
-                icon: Icons.nights_stay,
-                initialValue: _sommeil,
-                onChanged: (val) => setState(() => _sommeil = val),
-              ),
-              MetricRow(
-                label: 'Humeur',
-                icon: Icons.mood,
-                initialValue: _humeur,
-                onChanged: (val) => setState(() => _humeur = val),
-              ),
-              MetricRow(
-                label: 'Énergie',
-                icon: Icons.bolt,
-                initialValue: _energie,
-                onChanged: (val) => setState(() => _energie = val),
-              ),
-              MetricRow(
-                label: 'Courbatures',
-                icon: Icons.fitness_center,
-                initialValue: _courbatures,
-                onChanged: (val) => setState(() => _courbatures = val),
-              ),
-              MetricRow(
-                label: 'Stress',
-                icon: Icons.cached,
-                initialValue: _stress,
-                onChanged: (val) => setState(() => _stress = val),
-              ),
-            ],
+          MetricRow(
+            label: 'Humeur',
+            icon: Icons.mood,
+            initialValue: _humeur,
+            onChanged: (val) => setState(() => _humeur = val),
           ),
-        ),
-      ],
+          MetricRow(
+            label: 'Énergie',
+            icon: Icons.bolt,
+            initialValue: _energie,
+            onChanged: (val) => setState(() => _energie = val),
+          ),
+          MetricRow(
+            label: 'Courbatures',
+            icon: Icons.fitness_center,
+            initialValue: _courbatures,
+            onChanged: (val) => setState(() => _courbatures = val),
+          ),
+          MetricRow(
+            label: 'Stress',
+            icon: Icons.cached,
+            initialValue: _stress,
+            onChanged: (val) => setState(() => _stress = val),
+          ),
+        ],
+      ),
     );
-  }
-
-  // Carte 1 : Chargement couleurs carré
-  Color _getGradientColor(int index) {
-    const colors = [
-      Color(0xFFB71C1C), // rouge foncé
-      Color(0xFFC65911), // orange-rouge foncé
-      Color(0xFFF57F17), // orange foncé
-      Color(0xFFA08C00), // orange-jaune foncé
-      Color(0xFF558B2F), // vert-jaune foncé
-      Color(0xFF1B5E20), // vert foncé
-    ];
-    return colors[index];
-  }
-
-  // Carte 1 et 2 : Couleurs cercle de progression
-  Color _getColor(double percentage) {
-    if (percentage <= 40) return const Color(0xFFB71C1C);
-    if (percentage <= 70) return const Color(0xFFF57F17);
-    return const Color(0xFF1B5E20);
   }
 }
 
-// Carte 2 : Définition classe des barres progressives
+//Définition classe des barres progressives
 class MetricRow extends StatefulWidget {
   final String label;
-  final int initialValue;
+  final double initialValue;
   final IconData icon;
-  final ValueChanged<int> onChanged;
+  final ValueChanged<double> onChanged;
 
   const MetricRow({
     super.key,
@@ -822,7 +273,7 @@ class MetricRow extends StatefulWidget {
 }
 
 class _MetricRowState extends State<MetricRow> {
-  late int _value;
+  late double _value = 0.0;
 
   @override
   void initState() {
@@ -831,15 +282,17 @@ class _MetricRowState extends State<MetricRow> {
   }
 
   void _decrement() {
-    if (_value > 0) {
-      setState(() => _value--);
+    if (_value > 0.0) {
+      setState(() => _value -= 0.5);
+      debugPrint("$_value");
       widget.onChanged(_value);
     }
   }
 
   void _increment() {
-    if (_value < 5) {
-      setState(() => _value++);
+    if (_value < 5.0) {
+      setState(() => _value += 0.5);
+      debugPrint("$_value");
       widget.onChanged(_value);
     }
   }
@@ -852,35 +305,33 @@ class _MetricRowState extends State<MetricRow> {
         children: [
           // Icon + Text indicatif
           Icon(widget.icon, size: 20),
-          const SizedBox(width: 8),
+          const SizedBox(width: 16),
           //SizedBox(width: 85, child: Text(widget.label)),
 
           // Barre progressive
           Expanded(
             child: LinearProgressIndicator(
-              value: _value / 5,
+              value: _value / 5.0,
               minHeight: 8,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
           const SizedBox(width: 16),
 
-          // Résultat
-          Text('$_value/5'),
-          const SizedBox(width: 8),
-
           // Bouton +
           IconButton(
             icon: const Icon(Icons.remove_circle_outline),
-            onPressed: _value > 0 ? _decrement : null,
+            onPressed: _value > 0.0 ? _decrement : null,
             iconSize: 20,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
           ),
+          const SizedBox(width: 8),
+
           // Bouton -
           IconButton(
             icon: const Icon(Icons.add_circle_outline),
-            onPressed: _value < 5 ? _increment : null,
+            onPressed: _value < 5.0 ? _increment : null,
             iconSize: 20,
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),

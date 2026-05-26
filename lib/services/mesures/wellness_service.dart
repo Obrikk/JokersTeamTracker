@@ -17,17 +17,16 @@ class WellnessService {
         .eq('joueur_id', joueurId)
         .eq('date', today)
         .maybeSingle();
-
     if (data == null) return null;
 
     return WellnessModel(
       joueurId: data['joueur_id'] as String,
       date: DateTime.parse(data['date'] as String),
-      sommeil: data['sommeil'] as int,
-      humeur: data['humeur'] as int,
-      energie: data['energie'] as int,
-      courbatures: data['courbatures'] as int,
-      stress: data['stress'] as int,
+      sommeil: data['sommeil'] as double,
+      humeur: data['humeur'] as double,
+      energie: data['energie'] as double,
+      courbatures: data['courbatures'] as double,
+      stress: data['stress'] as double,
       joueurNom: data['joueur_nom'] as String,
       joueurPrenom: data['joueur_prenom'] as String,
     );
@@ -75,14 +74,14 @@ class WellnessService {
 
     final count = data.length;
 
-    final totals = data.fold<Map<String, int>>(
+    final totals = data.fold<Map<String, double>>(
       {'sommeil': 0, 'humeur': 0, 'energie': 0, 'courbatures': 0, 'stress': 0},
       (acc, e) => {
-        'sommeil': acc['sommeil']! + (e['sommeil'] as int),
-        'humeur': acc['humeur']! + (e['humeur'] as int),
-        'energie': acc['energie']! + (e['energie'] as int),
-        'courbatures': acc['courbatures']! + (e['courbatures'] as int),
-        'stress': acc['stress']! + (e['stress'] as int),
+        'sommeil': acc['sommeil']! + (e['sommeil'] as double),
+        'humeur': acc['humeur']! + (e['humeur'] as double),
+        'energie': acc['energie']! + (e['energie'] as double),
+        'courbatures': acc['courbatures']! + (e['courbatures'] as double),
+        'stress': acc['stress']! + (e['stress'] as double),
       },
     );
 
@@ -95,7 +94,7 @@ class WellnessService {
     };
   }
 
-  Future<int> getTodayWellnessTotal(String joueurId) async {
+  Future<double> getTodayWellnessTotal(String joueurId) async {
     final today = DateTime.now().toIso8601String().split('T').first;
 
     final data = await supabase
@@ -106,15 +105,15 @@ class WellnessService {
 
     if ((data as List).isEmpty) return 0;
 
-    final total = data.fold<int>(
+    final total = data.fold<double>(
       0,
       (sum, e) =>
           sum +
-          (e['sommeil'] as int) +
-          (e['humeur'] as int) +
-          (e['energie'] as int) +
-          (e['courbatures'] as int) +
-          (e['stress'] as int),
+          (e['sommeil'] as double) +
+          (e['humeur'] as double) +
+          (e['energie'] as double) +
+          (e['courbatures'] as double) +
+          (e['stress'] as double),
     );
 
     return total;
