@@ -12,15 +12,20 @@ class GripConsult extends StatefulWidget {
 class _GripConsultState extends State<GripConsult> {
   final GripService _gripService = GripService();
 
-  double _grip = 0;
+  double _gripMin = 0;
+  double _gripMoy = 0;
+  double _gripMax = 0;
 
   Future<Map<String, double>> _loadGrip() async {
-    final grip = await _gripService.getTodayGripAverages();
+    final gripMoyen = await _gripService.getTodayGripAverages();
+    final gripMinMax = await _gripService.getTodayGripMinMax();
 
     setState(() {
-      _grip = grip['grip']!;
+      _gripMin = gripMinMax['gripMin']!;
+      _gripMoy = gripMoyen['grip']!;
+      _gripMax = gripMinMax['gripMax']!;
     });
-    return grip;
+    return gripMoyen;
   }
 
   @override
@@ -31,6 +36,10 @@ class _GripConsultState extends State<GripConsult> {
 
   @override
   Widget build(BuildContext context) {
+    _gripMin = double.parse(_gripMin.toStringAsFixed(2));
+    _gripMoy = double.parse(_gripMoy.toStringAsFixed(2));
+    _gripMax = double.parse(_gripMax.toStringAsFixed(2));
+
     return Column(
       children: [
         Card(
@@ -65,12 +74,42 @@ class _GripConsultState extends State<GripConsult> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Grip :',
+                            'Grip Min :',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(width: 32),
                           Text(
-                            '$_grip kg',
+                            '$_gripMin kg',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Grip Moyen:',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          const SizedBox(width: 32),
+                          Text(
+                            '$_gripMoy kg',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Grip Max :',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          const SizedBox(width: 32),
+                          Text(
+                            '$_gripMax kg',
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ],

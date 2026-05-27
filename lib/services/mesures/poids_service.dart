@@ -69,6 +69,25 @@ class PoidsService {
     return {'poids': totals['poids']! / count};
   }
 
+  Future<Map<String, double>> getTodayPoidsMinMax() async {
+    final today = DateTime.now().toIso8601String().split('T').first;
+
+    final data = await supabase
+        .from('poids')
+        .select('poids')
+        .eq('date', today)
+        .order('poids', ascending: false);
+
+    if (data.isNotEmpty) {
+      final poidsMin = data.first['poids'];
+      final poidsMax = data.last['poids'];
+
+      return {'poidsMin': poidsMin, 'poidsMax': poidsMax};
+    } else {
+      return {'poidsMin': 0, 'poidsMax': 0};
+    }
+  }
+
   Future<double> getTodayPoidsTotal(String joueurId) async {
     final today = DateTime.now().toIso8601String().split('T').first;
 

@@ -49,16 +49,6 @@ class WellnessService {
     return (data as List).map((e) => WellnessModel.fromMap(e)).toList();
   }
 
-  Future<List<WellnessModel>> getWellnessTodayHistory(DateTime date) async {
-    final data = await supabase
-        .from('wellness')
-        .select()
-        .eq('date', date)
-        .order('joueur_id', ascending: true);
-
-    return (data as List).map((e) => WellnessModel.fromMap(e)).toList();
-  }
-
   Future<List<WellnessModel>> getTodayWellnessAllPlayers() async {
     final today = DateTime.now().toIso8601String().split('T').first;
 
@@ -101,7 +91,6 @@ class WellnessService {
   // Calculs
   //
 
-  /// Retourne la moyenne du score_total de l'équipe par jour sur les N derniers jours.
   Future<List<Map<String, dynamic>>> getTeamWellnessRangeAverage({
     int days = 30,
   }) async {

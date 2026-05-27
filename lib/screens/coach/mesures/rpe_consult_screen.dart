@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../services/mesures/rpe_service.dart';
+import 'rpe_graphs_screen.dart';
 
 class RpeConsult extends StatefulWidget {
   @override
@@ -37,6 +38,7 @@ class _RpeConsultState extends State<RpeConsult> {
   @override
   Widget build(BuildContext context) {
     final color = _getColor(_rpeTotal * 5);
+    _rpeTotal = double.parse(_rpeTotal.toStringAsFixed(2));
 
     return Column(
       children: [
@@ -130,7 +132,14 @@ class _RpeConsultState extends State<RpeConsult> {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RpeGraphs(),
+                          ),
+                        );
+                      },
                       child: Text('Afficher Graphiques'),
                     ),
                   ],

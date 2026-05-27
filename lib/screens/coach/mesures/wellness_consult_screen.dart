@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jokers_team_tracker/screens/coach/mesures/wellness_graphs_screen.dart';
+import 'wellness_graphs_screen.dart';
 
 import '../../../services/mesures/wellness_service.dart';
 
@@ -50,6 +50,7 @@ class _WellnessConsultState extends State<WellnessConsult> {
   @override
   Widget build(BuildContext context) {
     final color = _getColor(_wellnessTotal * 4);
+    _wellnessTotal = double.parse(_wellnessTotal.toStringAsFixed(2));
 
     return Column(
       children: [

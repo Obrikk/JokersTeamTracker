@@ -2,12 +2,19 @@ import '../../core/constants/supabase_constants.dart';
 import '../../models/mesures/rpe_model.dart';
 
 class RpeService {
+  //
+  // Enregistrement
+  //
+
   Future<void> saveToday(RpeModel model) async {
     await supabase
         .from('rpe')
         .upsert(model.toMap(), onConflict: 'joueur_id, date');
   }
 
+  //
+  // Lecture
+  //
   Future<RpeModel?> getTodayRpe(String joueurId) async {
     final today = DateTime.now().toIso8601String().split('T').first;
 
@@ -50,6 +57,71 @@ class RpeService {
         .order('joueur_nom', ascending: true);
 
     return (data as List).map((e) => RpeModel.fromMap(e)).toList();
+  }
+
+  Future<List<RpeModel>> getTeamRpeRange({int days = 30}) async {
+    final startStr = DateTime.now()
+        .subtract(Duration(days: days))
+        .toIso8601String()
+        .substring(0, 10);
+
+    final data = await supabase
+        .from('rpe')
+        .select()
+        .gte('date', startStr)
+        .order('date', ascending: true);
+
+    return (data as List).map((row) {
+      return RpeModel.fromMap({
+        'joueur_id': row['joueur_id'],
+        'joueur_nom': row['joueur_nom'],
+        'joueur_prenom': row['joueur_prenom'],
+        'date': row['date'],
+        'rpem': row['rpem'],
+        'rpec': row['rpec'],
+      });
+    }).toList();
+  }
+
+  //
+  // Calculs
+  //
+
+  Future<List<Map<String, dynamic>>> getTeamRpeRangeAverage({
+    int days = 30,
+  }) async {
+    final startDate = DateTime.now().subtract(Duration(days: days));
+
+    final List<dynamic> data = await supabase
+        .from('rpe')
+        .select('date, rpem, rpec')
+        .gte('date', startDate.toIso8601String().substring(0, 10))
+        .order('date', ascending: true);
+
+    if (data.isEmpty) return [];
+
+    final Map<String, List<Map<String, double>>> grouped = {};
+
+    for (final e in data) {
+      final date = e['date'] as String;
+
+      grouped.putIfAbsent(date, () => []).add({
+        'rpem': (e['rpem'] as num).toDouble(),
+        'rpec': (e['rpec'] as num).toDouble(),
+      });
+    }
+
+    return grouped.entries.map((entry) {
+      final values = entry.value;
+
+      final rpemAvg =
+          values.map((e) => e['rpem']!).reduce((a, b) => a + b) / values.length;
+
+      final rpecAvg =
+          values.map((e) => e['rpec']!).reduce((a, b) => a + b) / values.length;
+
+      return {'date': entry.key, 'rpem': rpemAvg, 'rpec': rpecAvg};
+    }).toList();
   }
 
   Future<Map<String, double>> getTodayRpeAverages() async {

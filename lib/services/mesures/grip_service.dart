@@ -69,6 +69,25 @@ class GripService {
     return {'grip': totals['grip']! / count};
   }
 
+  Future<Map<String, double>> getTodayGripMinMax() async {
+    final today = DateTime.now().toIso8601String().split('T').first;
+
+    final data = await supabase
+        .from('grip')
+        .select('grip')
+        .eq('date', today)
+        .order('grip', ascending: false);
+
+    if (data.isNotEmpty) {
+      final gripMin = data.first['grip'];
+      final gripMax = data.last['grip'];
+
+      return {'gripMin': gripMin, 'gripMax': gripMax};
+    } else {
+      return {'gripMin': 0, 'gripMax': 0};
+    }
+  }
+
   Future<double> getTodayGripTotal(String joueurId) async {
     final today = DateTime.now().toIso8601String().split('T').first;
 

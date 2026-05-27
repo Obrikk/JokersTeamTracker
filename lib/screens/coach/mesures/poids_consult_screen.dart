@@ -12,15 +12,20 @@ class PoidsConsult extends StatefulWidget {
 class _PoidsConsultState extends State<PoidsConsult> {
   final PoidsService _poidsService = PoidsService();
 
-  double _poids = 0;
+  double _poidsMin = 0;
+  double _poidsMoy = 0;
+  double _poidsMax = 0;
 
   Future<Map<String, double>> _loadPoids() async {
-    final poids = await _poidsService.getTodayPoidsAverages();
+    final poidsMinMax = await _poidsService.getTodayPoidsMinMax();
+    final poidsMoyen = await _poidsService.getTodayPoidsAverages();
 
     setState(() {
-      _poids = poids['poids']!;
+      _poidsMin = poidsMinMax['poidsMin']!;
+      _poidsMoy = poidsMoyen['poids']!;
+      _poidsMax = poidsMinMax['poidsMax']!;
     });
-    return poids;
+    return poidsMoyen;
   }
 
   @override
@@ -31,6 +36,10 @@ class _PoidsConsultState extends State<PoidsConsult> {
 
   @override
   Widget build(BuildContext context) {
+    _poidsMin = double.parse(_poidsMin.toStringAsFixed(2));
+    _poidsMoy = double.parse(_poidsMoy.toStringAsFixed(2));
+    _poidsMax = double.parse(_poidsMax.toStringAsFixed(2));
+
     return Column(
       children: [
         Card(
@@ -65,12 +74,42 @@ class _PoidsConsultState extends State<PoidsConsult> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Poids :',
+                            'Poids Min:',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(width: 32),
                           Text(
-                            '$_poids kg',
+                            '$_poidsMin kg',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Poids Moyen:',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          const SizedBox(width: 32),
+                          Text(
+                            '$_poidsMoy kg',
+                            style: Theme.of(context).textTheme.headlineMedium,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Poids Max:',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          const SizedBox(width: 32),
+                          Text(
+                            '$_poidsMax kg',
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ],
