@@ -77,7 +77,8 @@ class AppTheme {
     // Boutons texte
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: AppColors.green,
+        foregroundColor: Colors.grey,
+        side: const BorderSide(color: Colors.grey),
         textStyle: AppTextStyles.labelDark,
       ),
     ),

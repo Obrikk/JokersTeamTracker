@@ -44,4 +44,5 @@ class AppColors {
   // Couleurs Boutons
   static const Color colorButton = Color(0xFF008F4C);
   static const Color textOnButton = Color(0xFFFDFBF8);
+  static const Color ice = Color(0xFFE8F5E9);
 }

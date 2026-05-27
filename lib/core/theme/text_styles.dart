@@ -24,14 +24,14 @@ class AppTextStyles {
 
   // Sous Titres
   static const TextStyle headingDark = TextStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
+    fontSize: 17,
+    fontWeight: FontWeight.w700,
     fontFamily: 'Segoe UI',
-    color: AppColors.textPrimaryDark,
+    color: AppColors.greenLight,
   );
 
   static const TextStyle headingSmallDark = TextStyle(
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: FontWeight.w600,
     fontFamily: 'Segoe UI',
     color: AppColors.textPrimaryDark,
@@ -39,14 +39,14 @@ class AppTextStyles {
 
   // Body
   static const TextStyle bodyDark = TextStyle(
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: FontWeight.w400,
     fontFamily: 'Segoe UI',
     color: AppColors.textPrimaryDark,
   );
 
   static const TextStyle bodySecondaryDark = TextStyle(
-    fontSize: 14,
+    fontSize: 11,
     fontWeight: FontWeight.w400,
     fontFamily: 'Segoe UI',
     color: AppColors.textSecondaryDark,

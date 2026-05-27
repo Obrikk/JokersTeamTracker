@@ -211,44 +211,48 @@ class _WellnessFormState extends State<WellnessForm> {
     );
   }
 
-  // Création Carte Vide n°3
+  // Création Carte Vide
   Widget _buildNoWellnessCard() {
-    return Expanded(
-      // Affichage des barres progressives
-      child: Column(
-        children: [
-          MetricRow(
-            label: 'Sommeil',
-            icon: Icons.nights_stay,
-            initialValue: _sommeil,
-            onChanged: (val) => setState(() => _sommeil = val),
+    return Row(
+      children: [
+        Expanded(
+          // Affichage des barres progressives
+          child: Column(
+            children: [
+              MetricRow(
+                label: 'Sommeil',
+                icon: Icons.nights_stay,
+                initialValue: _sommeil,
+                onChanged: (val) => setState(() => _sommeil = val),
+              ),
+              MetricRow(
+                label: 'Humeur',
+                icon: Icons.mood,
+                initialValue: _humeur,
+                onChanged: (val) => setState(() => _humeur = val),
+              ),
+              MetricRow(
+                label: 'Énergie',
+                icon: Icons.bolt,
+                initialValue: _energie,
+                onChanged: (val) => setState(() => _energie = val),
+              ),
+              MetricRow(
+                label: 'Courbatures',
+                icon: Icons.fitness_center,
+                initialValue: _courbatures,
+                onChanged: (val) => setState(() => _courbatures = val),
+              ),
+              MetricRow(
+                label: 'Stress',
+                icon: Icons.cached,
+                initialValue: _stress,
+                onChanged: (val) => setState(() => _stress = val),
+              ),
+            ],
           ),
-          MetricRow(
-            label: 'Humeur',
-            icon: Icons.mood,
-            initialValue: _humeur,
-            onChanged: (val) => setState(() => _humeur = val),
-          ),
-          MetricRow(
-            label: 'Énergie',
-            icon: Icons.bolt,
-            initialValue: _energie,
-            onChanged: (val) => setState(() => _energie = val),
-          ),
-          MetricRow(
-            label: 'Courbatures',
-            icon: Icons.fitness_center,
-            initialValue: _courbatures,
-            onChanged: (val) => setState(() => _courbatures = val),
-          ),
-          MetricRow(
-            label: 'Stress',
-            icon: Icons.cached,
-            initialValue: _stress,
-            onChanged: (val) => setState(() => _stress = val),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

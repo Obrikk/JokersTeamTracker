@@ -2,12 +2,19 @@ import '../../core/constants/supabase_constants.dart';
 import '../../models/mesures/wellness_model.dart';
 
 class WellnessService {
+  //
+  // Enregistrement
+  //
+
   Future<void> saveToday(WellnessModel model) async {
     await supabase
         .from('wellness')
         .upsert(model.toMap(), onConflict: 'joueur_id, date');
   }
 
+  //
+  // Lecture
+  //
   Future<WellnessModel?> getTodayWellness(String joueurId) async {
     final today = DateTime.now().toIso8601String().split('T').first;
 
@@ -42,6 +49,16 @@ class WellnessService {
     return (data as List).map((e) => WellnessModel.fromMap(e)).toList();
   }
 
+  Future<List<WellnessModel>> getWellnessTodayHistory(DateTime date) async {
+    final data = await supabase
+        .from('wellness')
+        .select()
+        .eq('date', date)
+        .order('joueur_id', ascending: true);
+
+    return (data as List).map((e) => WellnessModel.fromMap(e)).toList();
+  }
+
   Future<List<WellnessModel>> getTodayWellnessAllPlayers() async {
     final today = DateTime.now().toIso8601String().split('T').first;
 
@@ -52,6 +69,81 @@ class WellnessService {
         .order('joueur_nom', ascending: true);
 
     return (data as List).map((e) => WellnessModel.fromMap(e)).toList();
+  }
+
+  Future<List<WellnessModel>> getTeamWellnessRange({
+    required String dateStart,
+    required String dateEnd,
+  }) async {
+    final data = await supabase
+        .from('wellness')
+        .select()
+        .gte('date', dateStart)
+        .lte('date', dateEnd)
+        .order('date', ascending: true);
+
+    return (data as List).map((row) {
+      return WellnessModel.fromMap({
+        'joueur_id': row['joueur_id'],
+        'joueur_nom': row['joueur_nom'],
+        'joueur_prenom': row['joueur_prenom'],
+        'date': row['date'],
+        'sommeil': row['sommeil'],
+        'humeur': row['humeur'],
+        'energie': row['energie'],
+        'courbatures': row['courbatures'],
+        'stress': row['stress'],
+      });
+    }).toList();
+  }
+
+  //
+  // Calculs
+  //
+
+  /// Retourne la moyenne du score_total de l'équipe par jour sur les N derniers jours.
+  Future<List<Map<String, dynamic>>> getTeamWellnessRangeAverage({
+    int days = 30,
+  }) async {
+    final startStr = DateTime.now()
+        .subtract(Duration(days: days))
+        .toIso8601String()
+        .substring(0, 10);
+
+    final response = await supabase
+        .from('wellness')
+        .select('date, sommeil, humeur, energie, courbatures, stress')
+        .gte('date', startStr)
+        .order('date', ascending: true);
+
+    // Agrégation par date côté Dart
+    final Map<String, List<double>> scoresByDate = {};
+
+    for (final row in response as List) {
+      final date = row['date'] as String;
+      final score = _computeScore(row);
+      scoresByDate.putIfAbsent(date, () => []).add(score);
+    }
+
+    return scoresByDate.entries.map((entry) {
+      final scores = entry.value;
+      final avg = scores.reduce((a, b) => a + b) / scores.length;
+      return {
+        'date': entry.key,
+        'score_total': double.parse(avg.toStringAsFixed(2)),
+      };
+    }).toList();
+  }
+
+  /// À adapter selon ta formule de calcul du score_total
+  double _computeScore(Map<String, dynamic> row) {
+    final sommeil = (row['sommeil'] as num).toDouble();
+    final humeur = (row['humeur'] as num).toDouble();
+    final energie = (row['energie'] as num).toDouble();
+    final courbatures = (row['courbatures'] as num).toDouble();
+    final stress = (row['stress'] as num).toDouble();
+
+    return (sommeil + humeur + energie + courbatures + stress) / 5;
   }
 
   Future<Map<String, double>> getTodayWellnessAverages() async {

@@ -3,6 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jokers_team_tracker/providers/user/auth_provider.dart';
 
 import '../../widgets/common/app_bar_widget.dart';
+import './mesures/wellness_consult_screen.dart';
+import './mesures/rpe_consult_screen.dart';
+import './mesures/grip_consult_screen.dart';
+import './mesures/poids_consult_screen.dart';
 
 class CoachDashboardScreen extends ConsumerStatefulWidget {
   const CoachDashboardScreen({super.key});
@@ -21,62 +25,26 @@ class _CoachDashboardScreenState extends ConsumerState<CoachDashboardScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBarWidget(profil: profile),
-      body: Center(
+      body: SafeArea(
+        top: true,
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(32),
+          padding: EdgeInsets.all(16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            //mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Card.filled(
-                color: Theme.of(context).colorScheme.surface,
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 32),
-                      Text(
-                        'Dashboard Coach',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                      const SizedBox(height: 32),
-                      OutlinedButton.icon(
-                        onPressed: () async {
-                          final confirm = await showDialog<bool>(
-                            context: context,
-                            builder: (ctx) => AlertDialog(
-                              title: const Text('Déconnexion'),
-                              content: const Text(
-                                'Es-tu sûr de vouloir te déconnecter ?',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(ctx, false),
-                                  child: const Text('Annuler'),
-                                ),
-                                FilledButton(
-                                  onPressed: () => Navigator.pop(ctx, true),
-                                  child: const Text('Déconnexion'),
-                                ),
-                              ],
-                            ),
-                          );
-
-                          if (confirm == true) {
-                            await ref.read(authProvider.notifier).logout();
-                          }
-                        },
-                        icon: const Icon(Icons.logout, color: Colors.red),
-                        label: const Text(
-                          'Se déconnecter',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.red),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                        ),
-                      ),
-                    ],
-                  ),
+              WellnessConsult(),
+              const SizedBox(height: 32),
+              RpeConsult(),
+              const SizedBox(height: 32),
+              PoidsConsult(),
+              const SizedBox(height: 32),
+              GripConsult(),
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  child: Text('Liste des Joueurs'),
                 ),
               ),
             ],
