@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../services/mesures/grip_service.dart';
+import '../../../../services/mesures/grip_service.dart';
 
-class GripConsult extends StatefulWidget {
+class GripConsult extends ConsumerStatefulWidget {
   @override
-  State<GripConsult> createState() => _GripConsultState();
+  ConsumerState<GripConsult> createState() => _GripConsultState();
 
   const GripConsult({super.key});
 }
 
-class _GripConsultState extends State<GripConsult> {
+class _GripConsultState extends ConsumerState<GripConsult> {
   final GripService _gripService = GripService();
 
   double _gripMin = 0;

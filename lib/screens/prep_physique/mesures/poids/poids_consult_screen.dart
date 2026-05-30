@@ -1,44 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../services/mesures/grip_service.dart';
+import '../../../../services/mesures/poids_service.dart';
 
-class GripConsult extends StatefulWidget {
+class PoidsConsult extends ConsumerStatefulWidget {
   @override
-  State<GripConsult> createState() => _GripConsultState();
+  ConsumerState<PoidsConsult> createState() => _PoidsConsultState();
 
-  const GripConsult({super.key});
+  const PoidsConsult({super.key});
 }
 
-class _GripConsultState extends State<GripConsult> {
-  final GripService _gripService = GripService();
+class _PoidsConsultState extends ConsumerState<PoidsConsult> {
+  final PoidsService _poidsService = PoidsService();
 
-  double _gripMin = 0;
-  double _gripMoy = 0;
-  double _gripMax = 0;
+  double _poidsMin = 0;
+  double _poidsMoy = 0;
+  double _poidsMax = 0;
 
-  Future<Map<String, double>> _loadGrip() async {
-    final gripMoyen = await _gripService.getTodayGripAverages();
-    final gripMinMax = await _gripService.getTodayGripMinMax();
+  Future<Map<String, double>> _loadPoids() async {
+    final poidsMinMax = await _poidsService.getTodayPoidsMinMax();
+    final poidsMoyen = await _poidsService.getTodayPoidsAverages();
 
     setState(() {
-      _gripMin = gripMinMax['gripMin']!;
-      _gripMoy = gripMoyen['grip']!;
-      _gripMax = gripMinMax['gripMax']!;
+      _poidsMin = poidsMinMax['poidsMin']!;
+      _poidsMoy = poidsMoyen['poids']!;
+      _poidsMax = poidsMinMax['poidsMax']!;
     });
-    return gripMoyen;
+    return poidsMoyen;
   }
 
   @override
   void initState() {
     super.initState();
-    _loadGrip();
+    _loadPoids();
   }
 
   @override
   Widget build(BuildContext context) {
-    _gripMin = double.parse(_gripMin.toStringAsFixed(2));
-    _gripMoy = double.parse(_gripMoy.toStringAsFixed(2));
-    _gripMax = double.parse(_gripMax.toStringAsFixed(2));
+    _poidsMin = double.parse(_poidsMin.toStringAsFixed(2));
+    _poidsMoy = double.parse(_poidsMoy.toStringAsFixed(2));
+    _poidsMax = double.parse(_poidsMax.toStringAsFixed(2));
 
     return Column(
       children: [
@@ -54,7 +55,7 @@ class _GripConsultState extends State<GripConsult> {
                   children: [
                     // En tête
                     Text(
-                      'Grip :',
+                      'Poids :',
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                     Text(
@@ -74,12 +75,12 @@ class _GripConsultState extends State<GripConsult> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Grip Min :',
+                            'Poids Min:',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(width: 32),
                           Text(
-                            '$_gripMin kg',
+                            '$_poidsMin kg',
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ],
@@ -89,12 +90,12 @@ class _GripConsultState extends State<GripConsult> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Grip Moyen:',
+                            'Poids Moyen:',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(width: 32),
                           Text(
-                            '$_gripMoy kg',
+                            '$_poidsMoy kg',
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ],
@@ -104,12 +105,12 @@ class _GripConsultState extends State<GripConsult> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Grip Max :',
+                            'Poids Max:',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           const SizedBox(width: 32),
                           Text(
-                            '$_gripMax kg',
+                            '$_poidsMax kg',
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ],

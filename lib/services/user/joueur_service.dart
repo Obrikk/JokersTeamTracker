@@ -1,4 +1,5 @@
 import '../../core/constants/supabase_constants.dart';
+import '../../models/user/joueur_model.dart';
 
 class JoueurService {
   Future<String> getPlayerId(String userId) async {
@@ -47,5 +48,14 @@ class JoueurService {
     }
 
     return data['prenom'] as String;
+  }
+
+  Future<List<JoueurModel>> getAllPlayers() async {
+    final data = await supabase
+        .from('joueur')
+        .select()
+        .order('nom', ascending: true);
+
+    return (data as List).map((e) => JoueurModel.fromMap(e)).toList();
   }
 }

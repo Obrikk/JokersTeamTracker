@@ -69,36 +69,6 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
               ),
 
               const SizedBox(height: 32),
-
-              // Carte Planing
-              SizedBox(
-                width: double.infinity,
-                child: Card.filled(
-                  color: Theme.of(context).colorScheme.surface,
-                  child: Padding(
-                    padding: const EdgeInsets.all(24),
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Planning :',
-                              style: Theme.of(context).textTheme.displayLarge,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 32),
-                        const Text("Bouton"),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 32),
             ],
           ),
         ),

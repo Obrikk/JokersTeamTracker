@@ -100,14 +100,14 @@ class AppTextStyles {
 
   // Sous titres
   static const TextStyle headingLight = TextStyle(
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: FontWeight.w600,
     fontFamily: 'Segoe UI',
     color: AppColors.textPrimaryLight,
   );
 
   static const TextStyle headingSmallLight = TextStyle(
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: FontWeight.w600,
     fontFamily: 'Segoe UI',
     color: AppColors.textPrimaryLight,
@@ -115,14 +115,14 @@ class AppTextStyles {
 
   // Body
   static const TextStyle bodyLight = TextStyle(
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: FontWeight.w400,
     fontFamily: 'Segoe UI',
     color: AppColors.textPrimaryLight,
   );
 
   static const TextStyle bodySecondaryLight = TextStyle(
-    fontSize: 14,
+    fontSize: 11,
     fontWeight: FontWeight.w400,
     fontFamily: 'Segoe UI',
     color: AppColors.textSecondaryLight,

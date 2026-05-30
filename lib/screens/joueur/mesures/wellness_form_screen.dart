@@ -19,6 +19,7 @@ class _WellnessFormState extends State<WellnessForm> {
 
   // Services Joueur => userId vers joueurId
   final JoueurService _joueurService = JoueurService();
+
   late Future<WellnessModel?> _wellnessFuture;
 
   // Variables du wellness

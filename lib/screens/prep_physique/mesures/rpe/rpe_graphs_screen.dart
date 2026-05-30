@@ -2,7 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:jokers_team_tracker/services/mesures/rpe_service.dart';
 
-import '../../../core/theme/colors.dart';
+import '../../../../core/theme/colors.dart';
 
 class RpeGraphs extends StatefulWidget {
   @override

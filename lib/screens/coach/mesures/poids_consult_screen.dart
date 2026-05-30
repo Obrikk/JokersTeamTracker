@@ -117,12 +117,6 @@ class _PoidsConsultState extends State<PoidsConsult> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 32),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text('Afficher Graphiques'),
-                ),
-
                 const SizedBox(height: 16),
               ],
             ),

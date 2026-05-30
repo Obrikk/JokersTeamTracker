@@ -1,5 +1,10 @@
+// ignore_for_file: unnecessary_null_comparison
+
+import 'package:flutter/material.dart';
+
 import '../../core/constants/supabase_constants.dart';
 import '../../models/mesures/rpe_model.dart';
+import '../../models/mesures/fill_rate_model.dart';
 
 class RpeService {
   //
@@ -15,6 +20,10 @@ class RpeService {
   //
   // Lecture
   //
+  bool hasRpeSubmitted(String joueurId) {
+    return getTodayRpe(joueurId) != null;
+  }
+
   Future<RpeModel?> getTodayRpe(String joueurId) async {
     final today = DateTime.now().toIso8601String().split('T').first;
 
@@ -35,6 +44,44 @@ class RpeService {
       joueurNom: data['joueur_nom'] as String,
       joueurPrenom: data['joueur_prenom'] as String,
     );
+  }
+
+  Future<FillRateModel> getRpeFillRate() async {
+    final today = DateTime.now().toIso8601String().split('T').first;
+
+    try {
+      final allJoueurs = await supabase
+          .from('joueur')
+          .select('id_joueur, nom, prenom');
+
+      final filled = await supabase
+          .from('rpe')
+          .select('joueur_id')
+          .eq('date', today);
+
+      final filledIds = (filled as List)
+          .where((e) => e['joueur_id'] != null)
+          .map((e) => e['joueur_id'] as String)
+          .toSet();
+
+      final missing = (allJoueurs as List)
+          .where((p) => !filledIds.contains(p['id_joueur']))
+          .map((p) {
+            final prenom = p['prenom']?.toString() ?? '';
+            final nom = p['nom']?.toString() ?? '';
+            return '$prenom $nom'.trim();
+          })
+          .toList();
+
+      return FillRateModel(
+        total: allJoueurs.length,
+        filled: filledIds.length,
+        missingPlayers: missing,
+      );
+    } catch (e) {
+      debugPrint('❌ fetchRpeFillRate error: $e');
+      rethrow;
+    }
   }
 
   Future<List<RpeModel>> getRpeHistory(String joueurId) async {

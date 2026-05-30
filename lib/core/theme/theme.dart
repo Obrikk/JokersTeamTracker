@@ -100,6 +100,11 @@ class AppTheme {
       color: AppColors.bgHoverDark,
       thickness: 1,
     ),
+
+    // CirculareProgressIndicator
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      circularTrackColor: Colors.white24,
+    ),
   );
 
   //
@@ -196,6 +201,11 @@ class AppTheme {
     dividerTheme: const DividerThemeData(
       color: AppColors.bgHoverLight,
       thickness: 1,
+    ),
+
+    // CirculareProgressIndicator
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      circularTrackColor: Colors.grey,
     ),
   );
 }
