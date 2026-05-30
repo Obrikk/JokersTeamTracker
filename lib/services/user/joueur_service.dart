@@ -18,6 +18,29 @@ class JoueurService {
     return data['id_joueur'] as String;
   }
 
+  Future<JoueurModel?> getPlayer(String userId) async {
+    final data = await supabase
+        .from('joueur')
+        .select()
+        .eq('user_id', userId)
+        .maybeSingle();
+
+    if (data == null) return null;
+
+    return JoueurModel(
+      id: data['id_joueur'] as String,
+      nom: data['nom'] as String,
+      prenom: data['prenom'] as String,
+      dateNaissance: DateTime.parse(data['date_naissance']),
+      poste: data['poste'] as String,
+      numero: data['numero'] as int,
+      tailleCm: data['taille_cm'] as int?,
+      poidsKg: data['poids_kg'] as double?,
+      dateArrivee: DateTime.parse(data['date_arrivee']),
+      userId: userId,
+    );
+  }
+
   Future<String> getPlayerNom(String userId) async {
     final data = await supabase
         .from('joueur')

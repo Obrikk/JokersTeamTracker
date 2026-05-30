@@ -21,7 +21,7 @@ class _MedicalDashboardScreenState
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBarWidget(profil: profile),
+      appBar: AppBarWidget(profil: profile, page: 'Dashboard'),
 
       body: Center(
         child: SingleChildScrollView(

@@ -69,7 +69,7 @@ class _ListeJoueurState extends ConsumerState<ListeJoueur> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBarWidget(profil: profile),
+      appBar: AppBarWidget(profil: profile, page: 'Liste Joueurs'),
       body: SafeArea(
         top: true,
         child: SingleChildScrollView(

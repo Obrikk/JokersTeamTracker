@@ -29,7 +29,7 @@ class _PrepDashboardScreenState extends ConsumerState<PrepDashboardScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBarWidget(profil: profile),
+      appBar: AppBarWidget(profil: profile, page: 'Dashboard'),
       body: SafeArea(
         top: true,
         child: SingleChildScrollView(

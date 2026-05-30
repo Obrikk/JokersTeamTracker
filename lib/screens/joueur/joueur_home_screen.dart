@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../core/theme/colors.dart';
 import '../../providers/user/auth_provider.dart';
 
 import '../../widgets/common/app_bar_widget.dart';
@@ -30,7 +31,7 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBarWidget(profil: profile),
+      appBar: AppBarWidget(profil: profile, page: 'Dashboard'),
       body: SafeArea(
         top: true,
         child: SingleChildScrollView(
@@ -67,8 +68,45 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                   ],
                 ),
               ),
+              const SizedBox(height: 64),
 
-              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    final confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('Déconnexion'),
+                        content: const Text(
+                          'Es-tu sûr de vouloir te déconnecter ?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(ctx, false),
+                            child: const Text('Annuler'),
+                          ),
+                          FilledButton(
+                            onPressed: () => Navigator.pop(ctx, true),
+                            child: const Text('Déconnexion'),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    if (confirm == true) {
+                      await ref.read(authProvider.notifier).logout();
+                    }
+                  },
+                  icon: const Icon(Icons.logout, color: AppColors.ice),
+                  label: const Text('Déconnexion'),
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: AppColors.red,
+                    foregroundColor: AppColors.textOnButton,
+                    padding: const EdgeInsets.all(14),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

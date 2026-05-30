@@ -1,28 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jokers_team_tracker/screens/joueur/profil/joueur_profil_screen.dart';
 
+import '../../core/constants/supabase_constants.dart';
 import '../../providers/theme_provider.dart';
 
-import '../../providers/user/auth_provider.dart';
 import '../../models/user/profiles_model.dart';
+import '../../screens/joueur/profil/joueur_profil_screen.dart';
 
 class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
+  final String page;
   final UserProfile? profil;
 
-  const AppBarWidget({super.key, required this.profil});
+  const AppBarWidget({super.key, required this.profil, required this.page});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = supabase.auth.currentUser;
+    final String id = user!.id;
     final isDark = ref.watch(themeProvider) == ThemeMode.dark;
+
+    final bool isProfilPage = page == 'Profil';
 
     return AppBar(
       backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       automaticallyImplyLeading: true,
       title: Text(
-        "Dashboard | ${profil?.nom ?? 'rien'} ${profil?.prenom ?? 'du tout'} ",
+        "$page | ${profil?.nom ?? 'rien'} ${profil?.prenom ?? 'du tout'} ",
         style: Theme.of(context).appBarTheme.titleTextStyle,
       ),
       actions: [
@@ -35,40 +42,21 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
                 icon: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
               ),
               const SizedBox(width: 16),
-              OutlinedButton.icon(
-                onPressed: () async {
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: const Text('Déconnexion'),
-                      content: const Text(
-                        'Es-tu sûr de vouloir te déconnecter ?',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(ctx, false),
-                          child: const Text('Annuler'),
-                        ),
-                        FilledButton(
-                          onPressed: () => Navigator.pop(ctx, true),
-                          child: const Text('Déconnexion'),
-                        ),
-                      ],
-                    ),
-                  );
-
-                  if (confirm == true) {
-                    await ref.read(authProvider.notifier).logout();
-                  }
-                },
-                icon: const Icon(Icons.logout, color: Colors.red),
-                label: const Text(
-                  'Se déconnecter',
-                  style: TextStyle(color: Colors.red),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Colors.red),
-                  padding: const EdgeInsets.all(14),
+              IconButton(
+                onPressed: isProfilPage
+                    ? null
+                    : () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                JoueurProfilScreen(userId: id),
+                          ),
+                        );
+                      },
+                icon: Icon(
+                  Icons.person,
+                  color: isProfilPage ? Theme.of(context).disabledColor : null,
                 ),
               ),
             ],
