@@ -114,7 +114,7 @@ class _RpeConsultState extends State<RpeConsult> {
                           children: [
                             // Cercle de Progression
                             CircularProgressIndicator(
-                              value: _rpeTotal / 10,
+                              value: _rpeTotal / 20,
                               strokeWidth: 6,
                               backgroundColor: Colors.white24,
                               valueColor: AlwaysStoppedAnimation<Color>(color),

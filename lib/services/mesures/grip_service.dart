@@ -19,8 +19,8 @@ class GripService {
   //
   // Lecture
   //
-  bool hasGripSubmitted(String joueurId) {
-    return getTodayGrip(joueurId) != null;
+  Future<bool> hasGripSubmitted(String joueurId) async {
+    return (await getTodayGrip(joueurId)) != null;
   }
 
   Future<GripModel?> getTodayGrip(String joueurId) async {
@@ -183,7 +183,7 @@ class GripService {
       'grip': 0,
     }, (acc, e) => {'grip': acc['grip']! + (e['grip'] as double)});
 
-    return {'grip': totals['grip']! / count};
+    return {'grip': double.parse((totals['grip']! / count).toStringAsFixed(2))};
   }
 
   Future<Map<String, double>> getTodayGripMinMax() async {

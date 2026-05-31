@@ -131,7 +131,7 @@ class _WellnessConsultState extends ConsumerState<WellnessConsult> {
                             children: [
                               // Cercle de Progression
                               CircularProgressIndicator(
-                                value: _wellnessTotal / 20,
+                                value: _wellnessTotal / 25,
                                 strokeWidth: 6,
                                 valueColor: AlwaysStoppedAnimation<Color>(
                                   color,

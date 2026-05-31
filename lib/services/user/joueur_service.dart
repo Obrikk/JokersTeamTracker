@@ -18,11 +18,11 @@ class JoueurService {
     return data['id_joueur'] as String;
   }
 
-  Future<JoueurModel?> getPlayer(String userId) async {
+  Future<JoueurModel?> getPlayer(String joueurId) async {
     final data = await supabase
         .from('joueur')
         .select()
-        .eq('user_id', userId)
+        .eq('id_joueur', joueurId)
         .maybeSingle();
 
     if (data == null) return null;
@@ -37,7 +37,7 @@ class JoueurService {
       tailleCm: data['taille_cm'] as int?,
       poidsKg: data['poids_kg'] as double?,
       dateArrivee: DateTime.parse(data['date_arrivee']),
-      userId: userId,
+      userId: data['user_id'] as String,
     );
   }
 

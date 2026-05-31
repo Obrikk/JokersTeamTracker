@@ -4,14 +4,13 @@ import 'package:jokers_team_tracker/models/mesures/statistiques_model.dart';
 import 'package:jokers_team_tracker/services/mesures/statistiques_service.dart';
 import 'package:jokers_team_tracker/services/user/joueur_service.dart';
 import 'package:jokers_team_tracker/widgets/common/app_bar_widget.dart';
-import '../../../core/constants/supabase_constants.dart';
 import '../../../models/user/joueur_model.dart';
 import '../../../providers/user/auth_provider.dart';
 import 'package:flutter_age_calculator/flutter_age_calculator.dart';
 
 class JoueurProfilScreen extends ConsumerStatefulWidget {
-  final String userId;
-  const JoueurProfilScreen({super.key, required this.userId});
+  final String joueurId;
+  const JoueurProfilScreen({super.key, required this.joueurId});
 
   @override
   ConsumerState<JoueurProfilScreen> createState() => _JoueurProfilScreenState();
@@ -20,7 +19,6 @@ class JoueurProfilScreen extends ConsumerStatefulWidget {
 class _JoueurProfilScreenState extends ConsumerState<JoueurProfilScreen> {
   final JoueurService joueurService = JoueurService();
   final StatsService statsService = StatsService();
-  final userId = supabase.auth.currentUser!.id;
 
   String id = '';
   String nom = '';
@@ -51,7 +49,7 @@ class _JoueurProfilScreenState extends ConsumerState<JoueurProfilScreen> {
   }
 
   Future<JoueurModel?> _loadJoueur() async {
-    final profileJoueur = await joueurService.getPlayer(userId);
+    final profileJoueur = await joueurService.getPlayer(widget.joueurId);
 
     if (profileJoueur != null) {
       setState(() {
@@ -73,8 +71,9 @@ class _JoueurProfilScreenState extends ConsumerState<JoueurProfilScreen> {
   }
 
   Future<StatsModel?> _loadStats() async {
-    final String joueurId = await joueurService.getPlayerId(userId);
-    final statsJoueur = await statsService.getPlayerRecentStats(joueurId);
+    final statsJoueur = await statsService.getPlayerRecentStats(
+      widget.joueurId,
+    );
 
     if (statsJoueur != null) {
       setState(() {
@@ -214,20 +213,6 @@ class _JoueurProfilScreenState extends ConsumerState<JoueurProfilScreen> {
                       ),
                     ),
                   ],
-                ),
-                const SizedBox(height: 32),
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      children: [
-                        Text(
-                          'Data du jour',
-                          style: Theme.of(context).textTheme.displayLarge,
-                        ),
-                      ],
-                    ),
-                  ),
                 ),
                 const SizedBox(height: 32),
                 SizedBox(

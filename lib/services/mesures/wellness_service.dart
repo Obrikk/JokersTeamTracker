@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
 
@@ -20,8 +20,8 @@ class WellnessService {
   //
   // Lecture
   //
-  bool hasWellnessSubmitted(String joueurId) {
-    return getTodayWellness(joueurId) != null;
+  Future<bool> hasWellnessSubmitted(String joueurId) async {
+    return (await getTodayWellness(joueurId)) != null;
   }
 
   Future<WellnessModel?> getTodayWellness(String joueurId) async {

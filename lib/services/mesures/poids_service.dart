@@ -19,8 +19,8 @@ class PoidsService {
   //
   // Lecture
   //
-  bool hasPoidsSubmitted(String joueurId) {
-    return getTodayPoids(joueurId) != null;
+  Future<bool> hasPoidsSubmitted(String joueurId) async {
+    return (await getTodayPoids(joueurId)) != null;
   }
 
   Future<PoidsModel?> getTodayPoids(String joueurId) async {
@@ -184,7 +184,9 @@ class PoidsService {
       'poids': 0,
     }, (acc, e) => {'poids': acc['poids']! + (e['poids'] as double)});
 
-    return {'poids': totals['poids']! / count};
+    return {
+      'poids': double.parse((totals['poids']! / count).toStringAsFixed(2)),
+    };
   }
 
   Future<Map<String, double>> getTodayPoidsMinMax() async {

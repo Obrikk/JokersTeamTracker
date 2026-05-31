@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jokers_team_tracker/providers/user/auth_provider.dart';
-import 'package:jokers_team_tracker/screens/prep_physique/equipe/liste_joueur.dart';
+
+import 'equipe/liste_joueur_prepa.dart';
 
 import '../../core/theme/colors.dart';
 
 import '../../widgets/common/app_bar_widget.dart';
-import 'mesures/wellness/wellness_consult_screen.dart';
-import 'mesures/wellness/wellness_fill_rate.dart';
-import 'mesures/rpe/rpe_consult_screen.dart';
-import 'mesures/rpe/rpe_fill_rate.dart';
-import 'mesures/grip/grip_consult_screen.dart';
-import 'mesures/grip/grip_fill_rate.dart';
-import 'mesures/poids/poids_consult_screen.dart';
-import 'mesures/poids/poids_fill_rate.dart';
+
+import '../staff/mesures/wellness/wellness_consult_screen.dart';
+import '../staff/mesures/wellness/wellness_fill_rate.dart';
+
+import '../staff/mesures/rpe/rpe_consult_screen.dart';
+import '../staff/mesures/rpe/rpe_fill_rate.dart';
+
+import '../staff/mesures/grip/grip_consult_screen.dart';
+import '../staff/mesures/grip/grip_fill_rate.dart';
+
+import '../staff/mesures/poids/poids_consult_screen.dart';
+import '../staff/mesures/poids/poids_fill_rate.dart';
 
 class PrepDashboardScreen extends ConsumerStatefulWidget {
   const PrepDashboardScreen({super.key});

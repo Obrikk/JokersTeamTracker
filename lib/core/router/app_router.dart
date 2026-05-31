@@ -10,7 +10,6 @@ import '../../screens/auth/login_screen.dart';
 import '../../screens/joueur/joueur_home_screen.dart';
 import '../../screens/coach/coach_home_screen.dart';
 import '../../screens/prep_physique/prep_home_screen.dart';
-import '../../screens/medical/medical_home_screen.dart';
 import '../../screens/admin/admin_home_screen.dart';
 
 const String routeLogin = '/login';
@@ -59,10 +58,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: routePrepDashboard,
         builder: (context, state) => const PrepDashboardScreen(),
       ),
-      GoRoute(
-        path: routeMedicalDashboard,
-        builder: (context, state) => const MedicalDashboardScreen(),
-      ),
+
       GoRoute(
         path: routeJoueurDashboard,
         builder: (context, state) => const JoueurDashboardScreen(),

@@ -15,7 +15,7 @@ class AppTheme {
     colorScheme: const ColorScheme.dark(
       primary: AppColors.green,
       primaryContainer: AppColors.greenDark,
-      secondary: AppColors.red,
+      secondary: AppColors.greenLight,
       error: AppColors.redLight,
       surface: AppColors.bgCardDark,
       onPrimary: AppColors.textPrimaryDark,

@@ -13,6 +13,7 @@ import '../../../services/mesures/poids_service.dart';
 import '../../../services/mesures/wellness_service.dart';
 import '../../../services/mesures/rpe_service.dart';
 import '../../../services/user/joueur_service.dart';
+import 'joueur_profil_screen_coach.dart';
 
 class ListeJoueur extends ConsumerStatefulWidget {
   const ListeJoueur({super.key});
@@ -52,10 +53,12 @@ class _ListeJoueurState extends ConsumerState<ListeJoueur> {
       result.add(
         JoueurStatut(
           joueur: joueur,
-          wellnessSubmitted: _wellnessService.hasWellnessSubmitted(joueur.id),
-          rpeSubmitted: _rpeService.hasRpeSubmitted(joueur.id),
-          gripSubmitted: _gripService.hasGripSubmitted(joueur.id),
-          poidsSubmitted: _poidsService.hasPoidsSubmitted(joueur.id),
+          wellnessSubmitted: await _wellnessService.hasWellnessSubmitted(
+            joueur.id,
+          ),
+          rpeSubmitted: await _rpeService.hasRpeSubmitted(joueur.id),
+          gripSubmitted: await _gripService.hasGripSubmitted(joueur.id),
+          poidsSubmitted: await _poidsService.hasPoidsSubmitted(joueur.id),
         ),
       );
     }
@@ -194,7 +197,13 @@ Widget _buildPlayerCard(BuildContext context, int index, JoueurStatut statut) {
               // Bouton Afficher Profil
               TextButton(
                 onPressed: () {
-                  // Navigation vers le profil
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          JoueurProfilScreenStaff(joueurId: joueur.id),
+                    ),
+                  );
                 },
                 style: TextButton.styleFrom(
                   shape: RoundedRectangleBorder(

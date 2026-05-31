@@ -28,6 +28,7 @@ class StatsService {
     final data = await supabase
         .from('statistiques')
         .select()
+        .eq('joueur_id', joueurId)
         .order('date', ascending: false)
         .limit(1)
         .maybeSingle();

@@ -20,8 +20,8 @@ class RpeService {
   //
   // Lecture
   //
-  bool hasRpeSubmitted(String joueurId) {
-    return getTodayRpe(joueurId) != null;
+  Future<bool> hasRpeSubmitted(String joueurId) async {
+    return (await getTodayRpe(joueurId)) != null;
   }
 
   Future<RpeModel?> getTodayRpe(String joueurId) async {

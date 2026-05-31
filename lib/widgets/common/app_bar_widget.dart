@@ -6,7 +6,6 @@ import '../../core/constants/supabase_constants.dart';
 import '../../providers/theme_provider.dart';
 
 import '../../models/user/profiles_model.dart';
-import '../../screens/joueur/profil/joueur_profil_screen.dart';
 
 class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
   final String page;
@@ -50,7 +49,7 @@ class AppBarWidget extends ConsumerWidget implements PreferredSizeWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                JoueurProfilScreen(userId: id),
+                                JoueurProfilScreen(joueurId: id),
                           ),
                         );
                       },
