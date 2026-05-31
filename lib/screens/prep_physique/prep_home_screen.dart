@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jokers_team_tracker/providers/user/auth_provider.dart';
 import 'package:jokers_team_tracker/screens/prep_physique/equipe/liste_joueur.dart';
 
+import '../../core/theme/colors.dart';
+
 import '../../widgets/common/app_bar_widget.dart';
 import 'mesures/wellness/wellness_consult_screen.dart';
 import 'mesures/wellness/wellness_fill_rate.dart';
@@ -91,6 +93,46 @@ class _PrepDashboardScreenState extends ConsumerState<PrepDashboardScreen> {
                         );
                       },
                       child: Text('Liste des Joueurs'),
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: const Text('Déconnexion'),
+                            content: const Text(
+                              'Es-tu sûr de vouloir te déconnecter ?',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx, false),
+                                child: const Text('Annuler'),
+                              ),
+                              FilledButton(
+                                onPressed: () => Navigator.pop(ctx, true),
+                                child: const Text('Déconnexion'),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (confirm == true) {
+                          await ref.read(authProvider.notifier).logout();
+                        }
+                      },
+                      icon: const Icon(Icons.logout, color: AppColors.ice),
+                      label: const Text('Déconnexion'),
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: AppColors.red,
+                        foregroundColor: AppColors.textOnButton,
+                        padding: const EdgeInsets.all(14),
+                      ),
                     ),
                   ),
                 ],

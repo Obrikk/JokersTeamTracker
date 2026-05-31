@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'wellness_graphs_screen.dart';
 
-import '../../../services/mesures/wellness_service.dart';
+import '../../../../services/mesures/wellness_service.dart';
 
 class WellnessConsult extends StatefulWidget {
   @override

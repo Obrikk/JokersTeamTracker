@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../services/mesures/grip_service.dart';
+import 'grip_graphs_screen.dart';
 
 class GripConsult extends ConsumerStatefulWidget {
   @override
@@ -119,6 +120,17 @@ class _GripConsultState extends ConsumerState<GripConsult> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const GripGraphs(),
+                      ),
+                    );
+                  },
+                  child: Text('Afficher Graphiques'),
+                ),
               ],
             ),
           ),

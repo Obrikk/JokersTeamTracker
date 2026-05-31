@@ -1,6 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison
-import 'package:flutter/material.dart';
-
 import '../../core/constants/supabase_constants.dart';
 import '../../models/mesures/statistiques_model.dart';
 

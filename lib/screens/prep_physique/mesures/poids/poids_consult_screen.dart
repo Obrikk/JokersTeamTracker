@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../services/mesures/poids_service.dart';
+import 'poids_graphs_screen.dart';
 
 class PoidsConsult extends ConsumerStatefulWidget {
   @override
@@ -118,7 +119,18 @@ class _PoidsConsultState extends ConsumerState<PoidsConsult> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const PoidsGraphs(),
+                      ),
+                    );
+                  },
+                  child: Text('Afficher Graphiques'),
+                ),
               ],
             ),
           ),

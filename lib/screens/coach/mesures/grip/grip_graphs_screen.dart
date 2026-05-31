@@ -1,49 +1,43 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:jokers_team_tracker/services/mesures/wellness_service.dart';
+import 'package:jokers_team_tracker/services/mesures/grip_service.dart';
 
-import '../../../core/theme/colors.dart';
+import '../../../../core/theme/colors.dart';
 
-class WellnessGraphs extends StatefulWidget {
+class GripGraphs extends StatefulWidget {
   @override
-  State<WellnessGraphs> createState() => _WellnessGraphsState();
+  State<GripGraphs> createState() => _GripGraphsState();
 
-  const WellnessGraphs({super.key});
+  const GripGraphs({super.key});
 }
 
-class _WellnessGraphsState extends State<WellnessGraphs> {
-  final WellnessService _wellnessServices = WellnessService();
+class _GripGraphsState extends State<GripGraphs> {
+  final GripService _gripService = GripService();
 
   late Future<List<Map<String, dynamic>>> _avgFuture;
 
   int _timeGraph = 7;
 
-  double _sommeil = 0;
-  double _humeur = 0;
-  double _energie = 0;
-  double _courbatures = 0;
-  double _stress = 0;
+  double _gripMin = 0;
+  double _gripMoy = 0;
+  double _gripMax = 0;
 
-  //Initialise les moyennes du wellness
-  Future<Map<String, double>> _loadWellness() async {
-    final wellness = await _wellnessServices.getTodayWellnessAverages();
+  Future<Map<String, double>> _loadGrip() async {
+    final gripMinMax = await _gripService.getTodayGripMinMax();
+    final gripMoyen = await _gripService.getTodayGripAverages();
 
     setState(() {
-      _sommeil = wellness['sommeil']!;
-      _humeur = wellness['humeur']!;
-      _energie = wellness['energie']!;
-      _courbatures = wellness['courbatures']!;
-      _stress = wellness['stress']!;
+      _gripMin = gripMinMax['gripMin']!;
+      _gripMoy = gripMoyen['grip']!;
+      _gripMax = gripMinMax['gripMax']!;
     });
-    return wellness;
+    return gripMoyen;
   }
 
   int initTimeGraph(int newTimeGraph) {
     _timeGraph = newTimeGraph;
     setState(() {
-      _avgFuture = _wellnessServices.getTeamWellnessRangeAverage(
-        days: _timeGraph,
-      );
+      _avgFuture = _gripService.getTeamGripRangeAverage(days: _timeGraph);
     });
     return _timeGraph;
   }
@@ -51,24 +45,23 @@ class _WellnessGraphsState extends State<WellnessGraphs> {
   @override
   void initState() {
     super.initState();
-    _loadWellness();
-    _avgFuture = _wellnessServices.getTeamWellnessRangeAverage(days: 7);
+    _loadGrip();
+    _avgFuture = _gripService.getTeamGripRangeAverage(days: 7);
   }
 
   @override
   Widget build(BuildContext context) {
-    final labels = ['Sommeil', 'Humeur', 'Énergie', 'Courbatures', 'Stress'];
-    final values = [_sommeil, _humeur, _energie, _courbatures, _stress];
-    final colors = [
-      Colors.green,
-      Colors.red,
-      Colors.green,
-      Colors.red,
-      Colors.green,
+    final labels = ['Grip Min.', 'Grip Moy.', 'Grip Max.'];
+    final values = [
+      double.parse(_gripMin.toStringAsFixed(2)),
+      double.parse(_gripMoy.toStringAsFixed(2)),
+      double.parse(_gripMax.toStringAsFixed(2)),
     ];
+    final colors = [Colors.blue, Colors.green, Colors.red];
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(title: const Text('Graphiques Wellness')),
+      appBar: AppBar(title: const Text('Graphiques Grip')),
       body: SafeArea(
         top: true,
         child: Padding(
@@ -131,13 +124,13 @@ class _WellnessGraphsState extends State<WellnessGraphs> {
                           child: LineChart(
                             LineChartData(
                               minY: 0,
-                              maxY: 5,
+                              maxY: 100,
                               minX: 0,
                               maxX: (avg.length - 1).toDouble(),
                               gridData: FlGridData(
                                 show: true,
                                 drawVerticalLine: false,
-                                horizontalInterval: 1,
+                                horizontalInterval: 10,
                                 getDrawingHorizontalLine: (value) =>
                                     FlLine(color: Colors.grey, strokeWidth: 1),
                               ),
@@ -152,7 +145,7 @@ class _WellnessGraphsState extends State<WellnessGraphs> {
                                   sideTitles: SideTitles(
                                     showTitles: true,
                                     reservedSize: 30,
-                                    interval: 1,
+                                    interval: 10,
                                   ),
                                 ),
                                 bottomTitles: AxisTitles(
@@ -215,7 +208,7 @@ class _WellnessGraphsState extends State<WellnessGraphs> {
                                   spots: avg.asMap().entries.map((entry) {
                                     return FlSpot(
                                       entry.key.toDouble(),
-                                      entry.value['score_total'] as double,
+                                      entry.value['grip'] as double,
                                     );
                                   }).toList(),
                                   isCurved: false,
@@ -251,11 +244,11 @@ class _WellnessGraphsState extends State<WellnessGraphs> {
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: SizedBox(
-                      height: 300,
+                      height: 400,
                       width: 500,
                       child: BarChart(
                         BarChartData(
-                          maxY: 5,
+                          maxY: 100,
                           minY: 0,
                           barTouchData: BarTouchData(
                             enabled: true,
@@ -277,7 +270,7 @@ class _WellnessGraphsState extends State<WellnessGraphs> {
                             leftTitles: AxisTitles(
                               sideTitles: SideTitles(
                                 showTitles: true,
-                                interval: 1,
+                                interval: 20,
                                 reservedSize: 28,
                                 getTitlesWidget: (value, meta) => Text(
                                   value.toInt().toString(),
@@ -314,7 +307,7 @@ class _WellnessGraphsState extends State<WellnessGraphs> {
                           ),
                           gridData: FlGridData(
                             show: true,
-                            horizontalInterval: 1,
+                            horizontalInterval: 20,
                             drawVerticalLine: false,
                             getDrawingHorizontalLine: (value) =>
                                 FlLine(color: Colors.grey, strokeWidth: 1),
@@ -325,7 +318,7 @@ class _WellnessGraphsState extends State<WellnessGraphs> {
                               bottom: BorderSide(color: Colors.grey, width: 1),
                             ),
                           ),
-                          barGroups: List.generate(5, (index) {
+                          barGroups: List.generate(3, (index) {
                             return BarChartGroupData(
                               x: index,
                               barRods: [

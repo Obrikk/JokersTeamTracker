@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../services/mesures/rpe_service.dart';
+import '../../../../services/mesures/rpe_service.dart';
 import 'rpe_graphs_screen.dart';
 
 class RpeConsult extends StatefulWidget {

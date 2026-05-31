@@ -194,7 +194,7 @@ class PoidsService {
         .from('poids')
         .select('poids')
         .eq('date', today)
-        .order('poids', ascending: false);
+        .order('poids', ascending: true);
 
     if (data.isNotEmpty) {
       final poidsMin = data.first['poids'];

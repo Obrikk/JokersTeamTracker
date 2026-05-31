@@ -104,6 +104,70 @@ class GripService {
     return (data as List).map((e) => GripModel.fromMap(e)).toList();
   }
 
+  Future<List<GripModel>> getTeamGripRange({int days = 30}) async {
+    final startStr = DateTime.now()
+        .subtract(Duration(days: days))
+        .toIso8601String()
+        .substring(0, 10);
+
+    final data = await supabase
+        .from('grip')
+        .select()
+        .gte('date', startStr)
+        .order('date', ascending: true);
+
+    return (data as List).map((row) {
+      return GripModel.fromMap({
+        'joueur_id': row['joueur_id'],
+        'joueur_nom': row['joueur_nom'],
+        'joueur_prenom': row['joueur_prenom'],
+        'date': row['date'],
+        'grip': row['grip'],
+      });
+    }).toList();
+  }
+
+  //
+  // Calculs
+  //
+
+  Future<List<Map<String, dynamic>>> getTeamGripRangeAverage({
+    int days = 30,
+  }) async {
+    final startDate = DateTime.now().subtract(Duration(days: days));
+
+    final List<dynamic> data = await supabase
+        .from('grip')
+        .select('date, grip')
+        .gte('date', startDate.toIso8601String().substring(0, 10))
+        .order('date', ascending: true);
+
+    if (data.isEmpty) {
+      return [
+        {'grip': 0.0},
+      ];
+    }
+
+    final Map<String, List<Map<String, double>>> grouped = {};
+
+    for (final e in data) {
+      final date = e['date'] as String;
+
+      grouped.putIfAbsent(date, () => []).add({
+        'grip': (e['grip'] as num).toDouble(),
+      });
+    }
+
+    return grouped.entries.map((entry) {
+      final values = entry.value;
+
+      final gripAvg =
+          values.map((e) => e['grip']!).reduce((a, b) => a + b) / values.length;
+
+      return {'date': entry.key, 'grip': gripAvg};
+    }).toList();
+  }
+
   Future<Map<String, double>> getTodayGripAverages() async {
     final today = DateTime.now().toIso8601String().split('T').first;
 
@@ -129,7 +193,7 @@ class GripService {
         .from('grip')
         .select('grip')
         .eq('date', today)
-        .order('grip', ascending: false);
+        .order('grip', ascending: true);
 
     if (data.isNotEmpty) {
       final gripMin = data.first['grip'];

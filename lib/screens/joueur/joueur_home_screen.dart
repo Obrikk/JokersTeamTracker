@@ -68,7 +68,7 @@ class _JoueurDashboardScreenState extends ConsumerState<JoueurDashboardScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 64),
+              const SizedBox(height: 48),
 
               SizedBox(
                 width: double.infinity,
